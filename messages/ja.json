@@ -78,9 +78,29 @@
     "sectionTagOrder": "— Step 01 · Order",
     "sectionTitleOrder": "オーダー入力",
     "flowExplanation": "SFL 公式ルールに準拠：Away（下位）が先に出場選手・キャラクターを提示 → Home（上位）が応答オーダーを決定。Home 側は Away が確定するまで入力できません。",
-    "waitingForAway": "● Away 確定待ち",
+    "waitingForAway": "Away 確定待ち",
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "ラインアップ・プレビュー",
+    "roleEntryTitle": {
+      "away": "Away として入力",
+      "home": "Home として入力"
+    },
+    "roleEntryDesc": {
+      "away": "下位チーム。先に出場選手・キャラクターを提示します。",
+      "home": "上位チーム。Away のオーダーを見てから応答します。"
+    },
+    "roleEntryCta": {
+      "away": "Away 入力へ",
+      "home": "Home 入力へ"
+    },
+    "copyUrl": "URL をコピー",
+    "copyUrlCopied": "● コピー済",
+    "backToDashboard": "ダッシュボードへ戻る",
+    "roleMismatchTag": "Warning",
+    "roleMismatchTitle": "別ロールの画面を開こうとしています",
+    "roleMismatchBody": "このスクリムでは別ロールで入力中です。{role} の画面を開くと相手のオーダーが見える可能性があります。本当によろしいですか？",
+    "roleMismatchCancel": "ダッシュボードに戻る",
+    "roleMismatchProceed": "理解した上で続行",
     "sides": {
       "home": "Home / 自軍",
       "away": "Away / 敵軍"

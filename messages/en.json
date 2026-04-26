@@ -1,20 +1,20 @@
 {
   "Meta": {
     "appName": "SFScrim",
-    "tagline": "Team battle operations for SFL — official ruleset"
+    "tagline": "Scrim operations tool for SF6 team battles"
   },
   "Landing": {
     "navScrim": "Scrim",
     "navRules": "Rules",
     "navHelp": "Help",
     "navSignIn": "▸ Sign in",
-    "heroPill": "SFL Pro-JP",
-    "heroLive": "Live · Season 2025",
+    "heroPill": "Beta",
+    "heroLive": "Live",
     "heroVersion": "v0.1.0",
     "heroTitleBold": "Team battle",
     "heroTitleNormal": "without the",
     "heroTitleAccent": "spreadsheet.",
-    "heroLead": "SFScrim is the team battle operations tool for SF6. Vanguard / Midfield / Champion lineups, home & away, mandatory appearances, victory points — all SFL-compliant. The era of typing lineups by hand mid-stream is over.",
+    "heroLead": "SFScrim is the team battle operations tool for SF6. Vanguard / Midfield / Champion lineups, home & away, mandatory appearances, victory points — all built on the official ruleset. The era of typing lineups by hand mid-stream is over.",
     "ctaCreate": "Create a scrim →",
     "ctaSaveHistory": "Save history",
     "stats": {
@@ -37,13 +37,13 @@
       },
       "rules": {
         "num": "No. 02 — Rules",
-        "title": "SFL-compliant",
+        "title": "Official ruleset",
         "desc": "Playoff 70pt / Grand Final 90pt auto-switching. Mandatory appearance tracking built-in."
       },
       "fourVsFour": {
         "num": "No. 03 — 4v4",
         "title": "4v4 ready",
-        "desc": "Built-in support for the Esports Nations Cup format."
+        "desc": "Built-in support for the international 4v4 format."
       },
       "i18n": {
         "num": "No. 04 — I18N",
@@ -77,7 +77,7 @@
   "Order": {
     "sectionTagOrder": "— Step 01 · Order",
     "sectionTitleOrder": "Lineup input",
-    "flowExplanation": "SFL-compliant flow: Away (lower seed) submits players & characters first → Home (higher seed) responds. Home cannot input until Away is locked.",
+    "flowExplanation": "Official-ruleset flow: Away (lower seed) submits players & characters first → Home (higher seed) responds. Home cannot input until Away is locked.",
     "waitingForAway": "Waiting for Away",
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "Lineup preview",

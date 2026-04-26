@@ -44,3 +44,14 @@ cloudflare-env.d.ts
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# design explorations (探索用、本番に含めない)
+/design-explorations/
+
+# claude code workflow markers (一時ファイル、コミット禁止)
+/.claude/.simplify-done
+/.claude/.review-approved
+/.claude/.ship-token
+
+# claude code session-local
+.claude/settings.local.json

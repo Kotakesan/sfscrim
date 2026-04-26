@@ -16,5 +16,13 @@ export const SFL_RULES = {
   },
 } as const;
 
-export type Position = keyof typeof SFL_RULES.position;
+// 通常バトルの 3 ポジション（先鋒・中堅・大将）
+export type BattlePosition = "vanguard" | "midfield" | "champion";
+
+// 選手登録用：通常 3 ポジション + 控え
+export type PlayerSlot = BattlePosition | "sub";
+
+// 試合記録用：通常 3 ポジション + 延長戦
+export type MatchPosition = BattlePosition | "tiebreak";
+
 export type FormatMode = keyof typeof SFL_RULES.format;

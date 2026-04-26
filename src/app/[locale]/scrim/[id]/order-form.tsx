@@ -160,9 +160,7 @@ function PlayerRow({
   disabled = false,
 }: PlayerRowProps) {
   const inputClass =
-    "border border-line bg-bg px-3 py-2 font-display text-sm focus:border-ink focus:outline-none disabled:cursor-not-allowed disabled:bg-bg-3";
-  const selectControlClass =
-    "border border-line bg-bg px-3 py-2 font-mono text-xs uppercase tracking-[0.14em] focus:border-ink focus:outline-none disabled:cursor-not-allowed disabled:bg-bg-3";
+    "min-w-0 border border-line bg-bg px-3 py-2 font-display text-sm focus:border-ink focus:outline-none disabled:cursor-not-allowed disabled:bg-bg-3";
 
   return (
     <div className="grid grid-cols-1 gap-2 border border-line bg-bg p-3 md:grid-cols-[110px_1fr_1fr_140px]">
@@ -204,7 +202,7 @@ function PlayerRow({
           })
         }
         disabled={disabled}
-        className={selectControlClass}
+        className={inputClass}
       >
         <option value="">{t("controlPlaceholder")}</option>
         {CONTROL_TYPES.map((ct) => (

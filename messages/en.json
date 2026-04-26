@@ -66,6 +66,7 @@
     "metaLabel": "Meta",
     "statusLabel": "Status",
     "statuses": {
+      "draft": "Draft",
       "in_progress": "In progress",
       "finished": "Finished"
     },
@@ -73,6 +74,41 @@
     "emptyHint": "Lineup input / score tracking UI will be added in follow-up issues. For now only ID and format are persisted. Reloading keeps state via localStorage.",
     "backToHome": "Back to home",
     "resetScrim": "Discard this scrim"
+  },
+  "Order": {
+    "sectionTagOrder": "— Step 01 · Order",
+    "sectionTitleOrder": "Lineup input",
+    "sectionTagPreview": "— Step 02 · Preview",
+    "sectionTitlePreview": "Lineup preview",
+    "sides": {
+      "home": "Home",
+      "away": "Away"
+    },
+    "positions": {
+      "vanguard": "Vanguard",
+      "midfield": "Midfield",
+      "champion": "Champion",
+      "sub": "Sub"
+    },
+    "controlTypes": {
+      "classic": "Classic",
+      "modern": "Modern"
+    },
+    "teamNamePlaceholder": "Team name",
+    "playerNamePlaceholder": "Player name",
+    "characterPlaceholder": "Pick a character",
+    "controlPlaceholder": "Control type",
+    "saveTeamOrder": "Save this team",
+    "savedLabel": "● Saved",
+    "unsetTeamName": "(team name not set)",
+    "emptySlot": "(empty)",
+    "startScrim": "Lock lineup → Start match",
+    "startScrimHint": "Fill in vanguard / midfield / champion for both teams to enable.",
+    "inProgressNotice": "Lineup locked. Score tracking / round iteration UI will be added in #7 / #8.",
+    "errors": {
+      "requiredPosition": "Player name for {position} is empty.",
+      "duplicateName": "Player name is duplicated: {name}"
+    }
   },
   "Common": {
     "loading": "Loading…",

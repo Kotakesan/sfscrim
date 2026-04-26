@@ -2,14 +2,20 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import type { FormatMode, Position } from "@/config/sfl-rules";
+import type {
+  FormatMode,
+  PlayerSlot,
+  MatchPosition,
+} from "@/config/sfl-rules";
+import type { ControlType } from "@/config/characters";
 
 export type Side = "home" | "away";
 
 export type Player = {
   name: string;
-  position: Position;
-  character?: string;
+  position: PlayerSlot;
+  characterId?: number;
+  controlType?: ControlType;
 };
 
 export type Team = {
@@ -20,17 +26,19 @@ export type Team = {
 
 export type MatchRecord = {
   roundNo: number;
-  position: Position | "tiebreak";
+  position: MatchPosition;
   winnerSide?: Side;
   points: number;
 };
+
+export type ScrimStatus = "draft" | "in_progress" | "finished";
 
 export type ScrimState = {
   id: string;
   format: FormatMode;
   teams: { home: Team; away: Team };
   matches: MatchRecord[];
-  status: "in_progress" | "finished";
+  status: ScrimStatus;
   createdAt: string;
 };
 
@@ -38,6 +46,9 @@ type ScrimStore = {
   scrims: Record<string, ScrimState>;
   initScrim: (id: string, format: FormatMode) => void;
   setFormat: (id: string, format: FormatMode) => void;
+  setTeamName: (id: string, side: Side, name: string) => void;
+  setTeamPlayers: (id: string, side: Side, players: Player[]) => void;
+  setStatus: (id: string, status: ScrimStatus) => void;
   reset: (id: string) => void;
   hasScrim: (id: string) => boolean;
   getScrim: (id: string) => ScrimState | undefined;
@@ -53,9 +64,19 @@ const buildEmptyScrim = (id: string, format: FormatMode): ScrimState => ({
     away: { name: "Away", side: "away", players: [] },
   },
   matches: [],
-  status: "in_progress",
+  status: "draft",
   createdAt: new Date().toISOString(),
 });
+
+const updateScrim = (
+  scrims: Record<string, ScrimState>,
+  id: string,
+  patch: (s: ScrimState) => ScrimState,
+): Record<string, ScrimState> => {
+  const current = scrims[id];
+  if (!current) return scrims;
+  return { ...scrims, [id]: patch(current) };
+};
 
 export const useScrimStore = create<ScrimStore>()(
   persist(
@@ -68,10 +89,35 @@ export const useScrimStore = create<ScrimStore>()(
         }));
       },
       setFormat: (id, format) => {
-        const current = get().scrims[id];
-        if (!current) return;
         set((state) => ({
-          scrims: { ...state.scrims, [id]: { ...current, format } },
+          scrims: updateScrim(state.scrims, id, (s) => ({ ...s, format })),
+        }));
+      },
+      setTeamName: (id, side, name) => {
+        set((state) => ({
+          scrims: updateScrim(state.scrims, id, (s) => ({
+            ...s,
+            teams: {
+              ...s.teams,
+              [side]: { ...s.teams[side], name },
+            },
+          })),
+        }));
+      },
+      setTeamPlayers: (id, side, players) => {
+        set((state) => ({
+          scrims: updateScrim(state.scrims, id, (s) => ({
+            ...s,
+            teams: {
+              ...s.teams,
+              [side]: { ...s.teams[side], players },
+            },
+          })),
+        }));
+      },
+      setStatus: (id, status) => {
+        set((state) => ({
+          scrims: updateScrim(state.scrims, id, (s) => ({ ...s, status })),
         }));
       },
       reset: (id) => {

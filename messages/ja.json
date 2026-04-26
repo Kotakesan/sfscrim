@@ -66,6 +66,7 @@
     "metaLabel": "メタ情報",
     "statusLabel": "ステータス",
     "statuses": {
+      "draft": "準備中",
       "in_progress": "進行中",
       "finished": "終了"
     },
@@ -73,6 +74,41 @@
     "emptyHint": "オーダー入力 / スコア記録 UI は後続 issue で追加されます。今は ID とフォーマットのみ保持。リロードしても状態は localStorage に保持されます。",
     "backToHome": "ホームへ戻る",
     "resetScrim": "このスクリムを破棄"
+  },
+  "Order": {
+    "sectionTagOrder": "— Step 01 · Order",
+    "sectionTitleOrder": "オーダー入力",
+    "sectionTagPreview": "— Step 02 · Preview",
+    "sectionTitlePreview": "ラインアップ・プレビュー",
+    "sides": {
+      "home": "Home / 自軍",
+      "away": "Away / 敵軍"
+    },
+    "positions": {
+      "vanguard": "先鋒",
+      "midfield": "中堅",
+      "champion": "大将",
+      "sub": "控え"
+    },
+    "controlTypes": {
+      "classic": "クラシック",
+      "modern": "モダン"
+    },
+    "teamNamePlaceholder": "チーム名",
+    "playerNamePlaceholder": "プレイヤー名",
+    "characterPlaceholder": "キャラ未選択",
+    "controlPlaceholder": "操作タイプ",
+    "saveTeamOrder": "このチームを保存",
+    "savedLabel": "● Saved",
+    "unsetTeamName": "チーム名未設定",
+    "emptySlot": "未入力",
+    "startScrim": "オーダー確定 → 試合開始",
+    "startScrimHint": "両チームの先鋒・中堅・大将を入力するとボタンが有効になります。",
+    "inProgressNotice": "オーダー確定済。試合進行 UI（スコア入力 / 巡目反復）は Issue #7 / #8 で追加されます。",
+    "errors": {
+      "requiredPosition": "{position} の選手名が未入力です。",
+      "duplicateName": "プレイヤー名が重複しています：{name}"
+    }
   },
   "Common": {
     "loading": "読み込み中…",

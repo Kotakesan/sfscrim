@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# SFScrim — /ship workflow enforcement hook
+# SFScrim — /ship-loop workflow enforcement hook
 # Blocks `gh pr create` and `gh pr merge` unless the corresponding
-# marker (.simplify-done / .review-approved) was written by /ship.
+# marker (.simplify-done / .review-approved) was written by /ship-loop.
 #
 # Markers:
 #   .claude/.simplify-done      → required for `gh pr create`
@@ -47,10 +47,10 @@ if [ ! -f "$marker" ]; then
 [BLOCKED] $cmd
 
 Marker not found: $marker
-You must run the /ship workflow which executes $action and writes this marker.
+You must run the /ship-loop workflow which executes $action and writes this marker.
 
 Direct \`gh pr create\` / \`gh pr merge\` is disabled to ensure quality gates run.
-Use the project-local /ship command instead.
+Use the project-local /ship-loop command instead.
 EOF
   exit 2
 fi
@@ -66,7 +66,7 @@ if [ "$age" -gt "$ttl" ]; then
 [BLOCKED] $cmd
 
 Marker expired: $marker (age: ${age}s, ttl: ${ttl}s)
-Re-run the /ship workflow to refresh.
+Re-run the /ship-loop workflow to refresh.
 EOF
   exit 2
 fi
@@ -79,7 +79,7 @@ if [ -z "$recorded_branch" ] || [ -z "$current_branch" ]; then
 [BLOCKED] $cmd
 
 Could not determine branch (recorded: '$recorded_branch', current: '$current_branch').
-Re-run the /ship workflow.
+Re-run the /ship-loop workflow.
 EOF
   exit 2
 fi
@@ -88,7 +88,7 @@ if [ "$recorded_branch" != "$current_branch" ]; then
 [BLOCKED] $cmd
 
 Marker is for branch '$recorded_branch' but current branch is '$current_branch'.
-Switch back to the correct branch or re-run /ship.
+Switch back to the correct branch or re-run /ship-loop.
 EOF
   exit 2
 fi

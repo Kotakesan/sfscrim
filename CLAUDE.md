@@ -11,9 +11,11 @@
 
 ## 🚢 開発ワークフロー（最重要・必読）
 
-**issue 実装後は必ず `/ship` コマンドを使う。`gh pr create` / `gh pr merge` の直接実行は hook で禁止されている。**
+**issue 実装後は必ず `/ship-loop` コマンドを使う。`gh pr create` / `gh pr merge` の直接実行は hook で禁止されている。**
 
-### `/ship` の流れ
+> ⚠️ ユーザー個人の汎用 `/ship` skill（PR 作成までで停止する別物）と区別するため、本プロジェクトでは **`/ship-loop`** を使う。`/ship` を呼ぶと個人版が起動して merge → 次 issue checkout まで進まないので注意。
+
+### `/ship-loop` の流れ
 
 ```
 /simplify → commit & push → PR 作成 → /review ループ
@@ -21,18 +23,20 @@
                                        └ 指摘あり → 修正 → /review
 ```
 
-詳細は `.claude/commands/ship.md` を参照。
+詳細は `.claude/commands/ship-loop.md` を参照。
 
 ### 強制力（hook）
 
 - `.claude/settings.json` の PreToolUse hook が `gh pr create` / `gh pr merge` を監視
 - マーカーファイル（`.claude/.simplify-done` / `.claude/.review-approved`）が無い・期限切れ・branch 不一致 なら BLOCK
-- マーカーは `/ship` フロー内でのみ発行される
+- マーカーは `/ship-loop` フロー内でのみ発行される
 - 直接 `gh pr create` を叩くと exit 2 で止まる
 
 ### 連続ループ
 
-`/ship` は完了後、自動で次の open issue を checkout して再帰的に走る。**open issue が 0 件になったら停止**。
+`/ship-loop` は完了後、自動で次の open issue を checkout して再帰的に走る。**open issue が 0 件になったら停止**。
+
+**重要**: `/review` が APPROVED を返したら、ユーザーに確認を取らず Step 7（承認マーカー）→ Step 8（merge）→ Step 9（main pull）→ Step 10（次 issue checkout & 実装着手）まで一気通貫で進める。途中で応答を返して停止しない。
 
 ### 二段防御
 

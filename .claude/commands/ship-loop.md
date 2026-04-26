@@ -1,11 +1,13 @@
 ---
-name: ship
+name: ship-loop
 description: SFScrim 専用ワークフロー — simplify → PR 作成 → review ループ → approve でマージ → 次の issue へ
 ---
 
-# /ship — SFScrim ワークフロー
+# /ship-loop — SFScrim ワークフロー
 
 issue 実装が完了したら必ずこのコマンドを使う。`gh pr create` / `gh pr merge` は hook によりこのワークフロー経由でしか通らない。
+
+> ⚠️ ユーザー個人の汎用 `/ship` skill（PR 作成までで停止する別物）と区別するため、本プロジェクトでは **`/ship-loop`** という名前で運用している。`/ship` を呼ばないこと。
 
 ## 全体フロー
 
@@ -21,7 +23,7 @@ issue 実装が完了したら必ずこのコマンドを使う。`gh pr create`
 7. .claude/.review-approved マーカー書き出し
 8. gh pr merge          ← hook が .review-approved を検証して通す（→ 削除）
 9. ローカルで main を pull、issue ブランチを削除
-10. 次の open issue を選んで checkout → 実装開始（再帰的に /ship）
+10. 次の open issue を選んで checkout → 実装開始（再帰的に /ship-loop）
 11. open issue が 0 になったら停止
 ```
 
@@ -62,7 +64,7 @@ hook が `.simplify-done` を検証 → 通過 → マーカー削除。
 
 `/review` の出力を確認：
 
-- **`APPROVED` という文字列を含む** → ループを抜けて Step 7 へ
+- **`APPROVED` という文字列を含む** → ループを抜けて Step 7 へ（**ユーザーに確認を取らず即座に進む**）
 - **それ以外（指摘がある）** → 指摘内容を読み、修正コミット & push、Step 5 に戻る
 
 ループ最大回数: **5 回**。それを超えたら停止して人間の判断を仰ぐ。
@@ -109,18 +111,20 @@ BRANCH_NAME="feat/issue-${ISSUE_NUM}-$(echo "$ISSUE_TITLE" | tr ' ' '-' | tr '[:
 git checkout -b "$BRANCH_NAME"
 ```
 
-その後、issue の本文を読んで実装に着手 → 完了したら再び `/ship`。
+その後、issue の本文を読んで実装に着手 → 完了したら再び `/ship-loop`。
 
 ## 失敗時の動作
 
 - /simplify が失敗 → 停止（人間が修正）
 - /review が 5 ラウンド以上 approve しない → 停止（人間が判断）
-- gh pr create / merge が hook で blocked → /ship フローに戻ってマーカーから再発行
+- gh pr create / merge が hook で blocked → /ship-loop フローに戻ってマーカーから再発行
 - マージ衝突 → main を pull → 解消してから retry
 
-## CLAUDE への指示
+## CLAUDE への指示（厳守）
 
 - **このワークフロー以外で `gh pr create` / `gh pr merge` を呼ばない**
-- マーカーファイルを手動で作らない（必ず /ship フロー内で書き出す）
+- マーカーファイルを手動で作らない（必ず /ship-loop フロー内で書き出す）
+- **`/review` が APPROVED を返したら、ユーザー確認を待たず Step 7→8→9→10 を一気通貫で実行する**（途中で応答を返して停止しない）
 - 5 回ループしても approve が出ない場合は人間に判断を仰ぐ
 - 全 issue が完了したら停止メッセージを出して終了
+- ユーザー個人の汎用 `/ship` skill は別物。`/ship-loop` を使うこと

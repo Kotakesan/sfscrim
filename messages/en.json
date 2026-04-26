@@ -3,12 +3,57 @@
     "appName": "SFScrim",
     "tagline": "Team battle operations for SFL — official ruleset"
   },
-  "Home": {
-    "title": "SFScrim",
-    "subtitle": "Team battle operations for SFL — official ruleset",
-    "description": "Stop typing lineups by hand mid-stream. SFL-compliant lineup management for vanguard / midfield / champion, home & away, mandatory appearance tracking, and 4v4.",
-    "ctaCreate": "Create a scrim",
-    "ctaLogin": "Sign in to save history"
+  "Landing": {
+    "navScrim": "Scrim",
+    "navRules": "Rules",
+    "navHelp": "Help",
+    "navSignIn": "▸ Sign in",
+    "heroPill": "SFL Pro-JP",
+    "heroLive": "Live · Season 2025",
+    "heroVersion": "v0.1.0",
+    "heroTitleBold": "Team battle",
+    "heroTitleNormal": "without the",
+    "heroTitleAccent": "spreadsheet.",
+    "heroLead": "SFScrim is the team battle operations tool for SF6. Vanguard / Midfield / Champion lineups, home & away, mandatory appearances, victory points — all SFL-compliant. The era of typing lineups by hand mid-stream is over.",
+    "ctaCreate": "Create a scrim →",
+    "ctaSaveHistory": "Save history",
+    "stats": {
+      "vanguard": "Vanguard / VG",
+      "midfield": "Midfield / Mid",
+      "champion": "Champion",
+      "regularMax": "Sec. Max — Reg.",
+      "playoffWin": "First to — Playoff",
+      "finalWin": "First to — Final"
+    },
+    "featuresTag": "— Features · Four pillars",
+    "featuresHeadingPre": "The",
+    "featuresHeadingAccent": "operations",
+    "featuresHeadingPost": "of team battle.",
+    "features": {
+      "order": {
+        "num": "No. 01 — Order",
+        "title": "Lineup management",
+        "desc": "Vanguard / midfield / champion + sub. Away-first → home response is automated."
+      },
+      "rules": {
+        "num": "No. 02 — Rules",
+        "title": "SFL-compliant",
+        "desc": "Playoff 70pt / Grand Final 90pt auto-switching. Mandatory appearance tracking built-in."
+      },
+      "fourVsFour": {
+        "num": "No. 03 — 4v4",
+        "title": "4v4 ready",
+        "desc": "Built-in support for the Esports Nations Cup format."
+      },
+      "i18n": {
+        "num": "No. 04 — I18N",
+        "title": "Multilingual",
+        "desc": "Instant switch between Japanese and English. Ready for international pros."
+      }
+    },
+    "footerCopyright": "SFScrim © 2026",
+    "footerTagline": "BUILT FOR THE FGC",
+    "footerDisclaimer": "NOT AFFILIATED W/ CAPCOM"
   },
   "Common": {
     "loading": "Loading…",

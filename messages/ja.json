@@ -3,12 +3,57 @@
     "appName": "SFScrim",
     "tagline": "SFL公式ルール準拠のチーム戦運用ツール"
   },
-  "Home": {
-    "title": "SFScrim",
-    "subtitle": "SFL公式ルール準拠のチーム戦運用ツール",
-    "description": "配信中の手入力オーダー管理から解放。先鋒/中堅/大将のオーダー、ホーム&アウェイ、出場義務、4v4 まで対応。",
-    "ctaCreate": "スクリムを作成",
-    "ctaLogin": "ログインして履歴を保存"
+  "Landing": {
+    "navScrim": "Scrim",
+    "navRules": "Rules",
+    "navHelp": "Help",
+    "navSignIn": "▸ Sign in",
+    "heroPill": "SFL Pro-JP",
+    "heroLive": "Live · Season 2025",
+    "heroVersion": "v0.1.0",
+    "heroTitleBold": "Team battle",
+    "heroTitleNormal": "without the",
+    "heroTitleAccent": "spreadsheet.",
+    "heroLead": "SFScrim は SF6 のチーム戦運営ツール。先鋒・中堅・大将のオーダー、ホーム＆アウェイ、出場義務、勝利ポイント、すべて公式ルールに準拠。配信中の手書き運用は、もう過去の話。",
+    "ctaCreate": "スクリムを作成 →",
+    "ctaSaveHistory": "履歴を保存",
+    "stats": {
+      "vanguard": "先鋒 / VG",
+      "midfield": "中堅 / Mid",
+      "champion": "大将 / Champion",
+      "regularMax": "節 Max — Reg.",
+      "playoffWin": "先取 — Playoff",
+      "finalWin": "先取 — Final"
+    },
+    "featuresTag": "— Features · Four pillars",
+    "featuresHeadingPre": "The",
+    "featuresHeadingAccent": "operations",
+    "featuresHeadingPost": "of team battle.",
+    "features": {
+      "order": {
+        "num": "No. 01 — Order",
+        "title": "オーダー管理",
+        "desc": "先鋒・中堅・大将＋控え。アウェイ先出し → ホーム応答も自動化。"
+      },
+      "rules": {
+        "num": "No. 02 — Rules",
+        "title": "SFL 公式準拠",
+        "desc": "プレイオフ 70pt / グランドファイナル 90pt 自動切替。出場義務トラッキング内蔵。"
+      },
+      "fourVsFour": {
+        "num": "No. 03 — 4v4",
+        "title": "4v4 対応",
+        "desc": "Esports Nations Cup フォーマット標準対応。"
+      },
+      "i18n": {
+        "num": "No. 04 — I18N",
+        "title": "多言語",
+        "desc": "日本語 / 英語の即時切替。海外プロの来日にも対応。"
+      }
+    },
+    "footerCopyright": "SFScrim © 2026",
+    "footerTagline": "BUILT FOR THE FGC",
+    "footerDisclaimer": "NOT AFFILIATED W/ CAPCOM"
   },
   "Common": {
     "loading": "読み込み中…",

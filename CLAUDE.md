@@ -34,6 +34,18 @@
 
 `/ship` は完了後、自動で次の open issue を checkout して再帰的に走る。**open issue が 0 件になったら停止**。
 
+### 二段防御
+
+- **ローカル層**: hook がマーカー検証 → `gh pr create/merge` を制御
+- **GitHub 層**: `main` ブランチ保護で **CI（lint / typecheck / build）必須** → CI 落ちたらマージ不可
+
+`.github/workflows/ci.yml` が PR ごとに 3 ジョブを走らせる：
+- `lint` (`pnpm lint`)
+- `typecheck` (`pnpm typecheck`)
+- `build` (`pnpm build`)
+
+→ ローカルでマーカー偽装してもブランチ保護がマージを拒否する。
+
 ---
 
 ## プロジェクト概要

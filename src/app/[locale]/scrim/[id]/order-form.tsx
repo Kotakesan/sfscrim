@@ -33,7 +33,7 @@ const buildEmptyDraft = (existing: Player[]): DraftPlayer[] => {
       name: p?.name ?? "",
       position: pos,
       characterId: p?.characterId,
-      controlType: p?.controlType,
+      controlType: p?.controlType ?? "classic",
     };
   });
 };

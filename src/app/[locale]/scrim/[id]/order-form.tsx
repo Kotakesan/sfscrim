@@ -43,6 +43,8 @@ type OrderFormProps = {
   side: Side;
   teamName: string;
   players: Player[];
+  /** SFL ルール準拠の「Away 先出し → Home 応答」順序制約。home 側で Away saved 待ちの間 true */
+  locked?: boolean;
 };
 
 export function OrderForm({
@@ -50,6 +52,7 @@ export function OrderForm({
   side,
   teamName,
   players,
+  locked = false,
 }: OrderFormProps) {
   const t = useTranslations("Order");
   const locale = useLocale();
@@ -68,16 +71,20 @@ export function OrderForm({
   const dirty = JSON.stringify(toCommitted(draft)) !== JSON.stringify(players);
 
   const onSave = () => {
-    if (errors.length > 0) return;
+    if (errors.length > 0 || locked) return;
     setTeamPlayers(scrimId, side, toCommitted(draft));
   };
 
   const sideLabel = t(`sides.${side}`);
 
   return (
-    <section className="border border-line bg-bg-2 p-6">
+    <section
+      className={`border bg-bg-2 p-6 transition-opacity ${
+        locked ? "border-line opacity-50" : "border-line"
+      }`}
+    >
       <header className="mb-5 flex flex-wrap items-center justify-between gap-3">
-        <div>
+        <div className="flex-1">
           <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
             {sideLabel}
           </div>
@@ -86,9 +93,15 @@ export function OrderForm({
             value={teamName}
             onChange={(e) => setTeamName(scrimId, side, e.target.value)}
             placeholder={t("teamNamePlaceholder")}
-            className="mt-1 w-full max-w-sm border-b-2 border-line bg-transparent pb-1 font-display text-2xl font-bold tracking-[-0.01em] focus:border-ink focus:outline-none"
+            disabled={locked}
+            className="mt-1 w-full max-w-sm border-b-2 border-line bg-transparent pb-1 font-display text-2xl font-bold tracking-[-0.01em] focus:border-ink focus:outline-none disabled:cursor-not-allowed"
           />
         </div>
+        {locked && (
+          <span className="rounded-none border border-accent bg-bg px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
+            {t("waitingForAway")}
+          </span>
+        )}
       </header>
 
       <div className="grid gap-3">
@@ -99,11 +112,12 @@ export function OrderForm({
             locale={locale}
             onChange={(patch) => updateDraft(idx, patch)}
             t={t}
+            disabled={locked}
           />
         ))}
       </div>
 
-      {errors.length > 0 && (
+      {!locked && errors.length > 0 && (
         <ul className="mt-4 border border-accent bg-accent-soft px-4 py-3 font-mono text-xs leading-relaxed text-accent">
           {errors.map((err) => (
             <li key={err}>· {err}</li>
@@ -115,7 +129,7 @@ export function OrderForm({
         <button
           type="button"
           onClick={onSave}
-          disabled={errors.length > 0 || !dirty}
+          disabled={locked || errors.length > 0 || !dirty}
           className="inline-flex h-11 items-center border-2 border-accent bg-accent px-5 font-display text-sm font-semibold text-bg transition-colors hover:border-ink hover:bg-ink disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-accent disabled:hover:bg-accent"
         >
           {t("saveTeamOrder")}
@@ -135,9 +149,21 @@ type PlayerRowProps = {
   locale: string;
   onChange: (patch: Partial<DraftPlayer>) => void;
   t: ReturnType<typeof useTranslations<"Order">>;
+  disabled?: boolean;
 };
 
-function PlayerRow({ draft, locale, onChange, t }: PlayerRowProps) {
+function PlayerRow({
+  draft,
+  locale,
+  onChange,
+  t,
+  disabled = false,
+}: PlayerRowProps) {
+  const inputClass =
+    "border border-line bg-bg px-3 py-2 font-display text-sm focus:border-ink focus:outline-none disabled:cursor-not-allowed disabled:bg-bg-3";
+  const selectControlClass =
+    "border border-line bg-bg px-3 py-2 font-mono text-xs uppercase tracking-[0.14em] focus:border-ink focus:outline-none disabled:cursor-not-allowed disabled:bg-bg-3";
+
   return (
     <div className="grid grid-cols-1 gap-2 border border-line bg-bg p-3 md:grid-cols-[110px_1fr_1fr_140px]">
       <div className="flex items-center font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
@@ -148,7 +174,8 @@ function PlayerRow({ draft, locale, onChange, t }: PlayerRowProps) {
         value={draft.name}
         onChange={(e) => onChange({ name: e.target.value })}
         placeholder={t("playerNamePlaceholder")}
-        className="border border-line bg-bg px-3 py-2 font-display text-sm focus:border-ink focus:outline-none"
+        disabled={disabled}
+        className={inputClass}
       />
       <select
         value={draft.characterId ?? ""}
@@ -157,7 +184,8 @@ function PlayerRow({ draft, locale, onChange, t }: PlayerRowProps) {
             characterId: e.target.value ? Number(e.target.value) : undefined,
           })
         }
-        className="border border-line bg-bg px-3 py-2 font-display text-sm focus:border-ink focus:outline-none"
+        disabled={disabled}
+        className={inputClass}
       >
         <option value="">{t("characterPlaceholder")}</option>
         {CHARACTERS.map((c) => (
@@ -175,7 +203,8 @@ function PlayerRow({ draft, locale, onChange, t }: PlayerRowProps) {
               : undefined,
           })
         }
-        className="border border-line bg-bg px-3 py-2 font-mono text-xs uppercase tracking-[0.14em] focus:border-ink focus:outline-none"
+        disabled={disabled}
+        className={selectControlClass}
       >
         <option value="">{t("controlPlaceholder")}</option>
         {CONTROL_TYPES.map((ct) => (

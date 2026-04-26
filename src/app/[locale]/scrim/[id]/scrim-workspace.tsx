@@ -93,21 +93,25 @@ export function ScrimWorkspace({ id }: { id: string }) {
         <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.24em] text-accent">
           {tOrder("sectionTagOrder")}
         </div>
-        <h2 className="mb-6 font-display text-3xl font-bold tracking-[-0.01em]">
+        <h2 className="mb-2 font-display text-3xl font-bold tracking-[-0.01em]">
           {tOrder("sectionTitleOrder")}
         </h2>
+        <p className="mb-6 max-w-2xl font-mono text-xs leading-relaxed text-muted">
+          {tOrder("flowExplanation")}
+        </p>
         <div className="grid gap-6 md:grid-cols-2">
-          <OrderForm
-            scrimId={id}
-            side="home"
-            teamName={scrim.teams.home.name}
-            players={scrim.teams.home.players}
-          />
           <OrderForm
             scrimId={id}
             side="away"
             teamName={scrim.teams.away.name}
             players={scrim.teams.away.players}
+          />
+          <OrderForm
+            scrimId={id}
+            side="home"
+            teamName={scrim.teams.home.name}
+            players={scrim.teams.home.players}
+            locked={!isMainBattleCommitted(scrim.teams.away.players)}
           />
         </div>
       </section>
@@ -162,12 +166,15 @@ export function ScrimWorkspace({ id }: { id: string }) {
 }
 
 function isOrderComplete(scrim: ScrimState): boolean {
-  return (["home", "away"] as const).every((side) => {
-    const players = scrim.teams[side].players;
-    return (["vanguard", "midfield", "champion"] as const).every((pos) =>
-      players.some((p) => p.position === pos && p.name.trim().length > 0),
-    );
-  });
+  return (["home", "away"] as const).every((side) =>
+    isMainBattleCommitted(scrim.teams[side].players),
+  );
+}
+
+function isMainBattleCommitted(players: ScrimState["teams"]["home"]["players"]): boolean {
+  return (["vanguard", "midfield", "champion"] as const).every((pos) =>
+    players.some((p) => p.position === pos && p.name.trim().length > 0),
+  );
 }
 
 function ScrimSkeleton() {

@@ -10,7 +10,10 @@
     "typecheck": "tsc --noEmit",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
-    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts",
+    "db:migrate:dev": "wrangler d1 migrations apply sfscrim-db --local",
+    "db:migrate:prod": "wrangler d1 migrations apply sfscrim-db --remote",
+    "db:execute:dev": "wrangler d1 execute sfscrim-db --local"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.19.4",
@@ -20,6 +23,7 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20260426.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

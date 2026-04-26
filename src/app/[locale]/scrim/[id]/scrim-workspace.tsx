@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
-import { useScrimStore, type ScrimState } from "@/store/scrim";
+import { useScrimStore } from "@/store/scrim";
 import type { FormatMode } from "@/config/sfl-rules";
 import { LocaleSwitcher } from "@/components/locale-switcher";
-import { OrderForm } from "./order-form";
+import { isMainBattleCommitted, isOrderComplete } from "@/lib/order-state";
+import { useHydratedScrim } from "@/lib/use-hydrated-scrim";
+import { RoleEntry } from "./role-entry";
 import { LineupPreview } from "./lineup-preview";
 import { RegularSeasonScoring } from "./match-scoring";
 
@@ -19,24 +20,10 @@ const FORMAT_OPTIONS: ReadonlyArray<FormatMode> = [
 export function ScrimWorkspace({ id }: { id: string }) {
   const t = useTranslations("Scrim");
   const tOrder = useTranslations("Order");
-  const [hydrated, setHydrated] = useState(false);
-  const scrim = useScrimStore((s) => s.scrims[id]);
-  const initScrim = useScrimStore((s) => s.initScrim);
+  const { hydrated, scrim } = useHydratedScrim(id);
   const setFormat = useScrimStore((s) => s.setFormat);
   const setStatus = useScrimStore((s) => s.setStatus);
   const reset = useScrimStore((s) => s.reset);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setHydrated(useScrimStore.persist.hasHydrated());
-    return useScrimStore.persist.onFinishHydration(() => setHydrated(true));
-  }, []);
-
-  useEffect(() => {
-    if (hydrated && !scrim) {
-      initScrim(id, "regular");
-    }
-  }, [hydrated, scrim, id, initScrim]);
 
   if (!hydrated || !scrim) {
     return <ScrimSkeleton />;
@@ -44,6 +31,7 @@ export function ScrimWorkspace({ id }: { id: string }) {
 
   const orderReady = isOrderComplete(scrim);
   const canStart = orderReady && scrim.status === "draft";
+  const awaySaved = isMainBattleCommitted(scrim.teams.away.players);
 
   return (
     <main className="mx-auto max-w-[1320px] flex-1 px-8 py-12">
@@ -96,32 +84,20 @@ export function ScrimWorkspace({ id }: { id: string }) {
         </section>
       </div>
 
-      <section className="mt-10">
-        <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.24em] text-accent">
-          {tOrder("sectionTagOrder")}
-        </div>
-        <h2 className="mb-2 font-display text-3xl font-bold tracking-[-0.01em]">
-          {tOrder("sectionTitleOrder")}
-        </h2>
-        <p className="mb-6 max-w-2xl font-mono text-xs leading-relaxed text-muted">
-          {tOrder("flowExplanation")}
-        </p>
-        <div className="grid gap-6 md:grid-cols-2">
-          <OrderForm
-            scrimId={id}
-            side="away"
-            teamName={scrim.teams.away.name}
-            players={scrim.teams.away.players}
-          />
-          <OrderForm
-            scrimId={id}
-            side="home"
-            teamName={scrim.teams.home.name}
-            players={scrim.teams.home.players}
-            locked={!isMainBattleCommitted(scrim.teams.away.players)}
-          />
-        </div>
-      </section>
+      {scrim.status === "draft" && (
+        <section className="mt-10">
+          <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.24em] text-accent">
+            {tOrder("sectionTagOrder")}
+          </div>
+          <h2 className="mb-2 font-display text-3xl font-bold tracking-[-0.01em]">
+            {tOrder("sectionTitleOrder")}
+          </h2>
+          <p className="mb-6 max-w-2xl font-mono text-xs leading-relaxed text-muted">
+            {tOrder("flowExplanation")}
+          </p>
+          <RoleEntry scrimId={id} awayLocked={awaySaved} />
+        </section>
+      )}
 
       <section className="mt-12">
         <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.24em] text-accent">
@@ -166,25 +142,13 @@ export function ScrimWorkspace({ id }: { id: string }) {
             {t("resetScrim")}
           </button>
         </div>
-        {!orderReady && (
+        {!orderReady && scrim.status === "draft" && (
           <p className="mt-3 font-mono text-xs text-muted">
             {tOrder("startScrimHint")}
           </p>
         )}
       </section>
     </main>
-  );
-}
-
-function isOrderComplete(scrim: ScrimState): boolean {
-  return (["home", "away"] as const).every((side) =>
-    isMainBattleCommitted(scrim.teams[side].players),
-  );
-}
-
-function isMainBattleCommitted(players: ScrimState["teams"]["home"]["players"]): boolean {
-  return (["vanguard", "midfield", "champion"] as const).every((pos) =>
-    players.some((p) => p.position === pos && p.name.trim().length > 0),
   );
 }
 

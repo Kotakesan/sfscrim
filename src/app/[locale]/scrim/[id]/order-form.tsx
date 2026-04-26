@@ -99,7 +99,7 @@ export function OrderForm({
         </div>
         {locked && (
           <span className="rounded-none border border-accent bg-bg px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-accent">
-            {t("waitingForAway")}
+            ● {t("waitingForAway")}
           </span>
         )}
       </header>

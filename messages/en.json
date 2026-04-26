@@ -78,9 +78,29 @@
     "sectionTagOrder": "— Step 01 · Order",
     "sectionTitleOrder": "Lineup input",
     "flowExplanation": "SFL-compliant flow: Away (lower seed) submits players & characters first → Home (higher seed) responds. Home cannot input until Away is locked.",
-    "waitingForAway": "● Waiting for Away",
+    "waitingForAway": "Waiting for Away",
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "Lineup preview",
+    "roleEntryTitle": {
+      "away": "Enter as Away",
+      "home": "Enter as Home"
+    },
+    "roleEntryDesc": {
+      "away": "Lower seed. Submits players & characters first.",
+      "home": "Higher seed. Responds after seeing Away's lineup."
+    },
+    "roleEntryCta": {
+      "away": "Open Away input",
+      "home": "Open Home input"
+    },
+    "copyUrl": "Copy URL",
+    "copyUrlCopied": "● Copied",
+    "backToDashboard": "Back to dashboard",
+    "roleMismatchTag": "Warning",
+    "roleMismatchTitle": "Opening a different role's view",
+    "roleMismatchBody": "You started this scrim as a different role. Opening the {role} view may reveal the opponent's lineup. Are you sure?",
+    "roleMismatchCancel": "Back to dashboard",
+    "roleMismatchProceed": "I understand, continue",
     "sides": {
       "home": "Home",
       "away": "Away"

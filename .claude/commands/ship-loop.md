@@ -9,19 +9,30 @@ issue 実装が完了したら必ずこのコマンドを使う。`gh pr create`
 
 > ⚠️ ユーザー個人の汎用 `/ship` skill（PR 作成までで停止する別物）と区別するため、本プロジェクトでは **`/ship-loop`** という名前で運用している。`/ship` を呼ばないこと。
 
+## 🛑 最重要：Claude が止まりやすい節目
+
+過去の運用で **「Skill ツールから戻った直後にテキスト応答を返してターン終了」** という失敗が複数回発生している。これは ship-loop が「自動継続」を期待しているのに、Skill 戻りが「ターンの自然な終端」になることで Claude が止まる罠。
+
+**対策（厳守）**:
+
+1. **Skill `/review` を使わない**。代わりに Bash で `gh pr diff <PR>` + `gh pr view <PR>` を取得し、**メインターン内で self-review** する。Skill 経由だと「Skill 完了 = 応答節目」になって止まる
+2. **マーカー発行は Write tool で行う**（後述）。Bash redirect (`>`) は権限プロンプトで止まりやすい
+3. **`APPROVED` 判定後はテキスト応答を返さず、即座に次の Bash/Write tool 呼び出しを行う**。1 文字も返してはならない
+4. **「指摘あり」判定後も同じく、即座に修正の Edit/Write/Bash を呼ぶ**。「修正します」とテキスト返してから止まらない
+
 ## 全体フロー
 
 ```
-1. /simplify でコード整形・冗長削除
+1. /simplify でコード整形・冗長削除（変更が UI/機能なら必須、ドキュメント/CI 設定のみなら省略可）
 2. コミット & push
-3. .claude/.simplify-done マーカー書き出し
+3. Write tool で .claude/.simplify-done に現ブランチ名を書き込み
 4. gh pr create        ← hook が .simplify-done を検証して通す（→ 削除）
-5. /review 実行
-6. レビューループ:
-   ├ "APPROVED" を含む → break
-   └ それ以外（指摘あり） → 修正コミット → push → 5 に戻る
-7. .claude/.review-approved マーカー書き出し
-8. gh pr merge          ← hook が .review-approved を検証して通す（→ 削除）
+5. Bash で gh pr diff + gh pr view → メインターン内で self-review（Skill /review は使わない）
+6. レビュー判定:
+   ├ "APPROVED" → break、即 Step 7 へ（応答テキスト返さない）
+   └ 指摘あり → 修正 Edit/Write/Bash を即座に実行 → コミット → push → Step 5 に戻る（応答テキスト返さない）
+7. Write tool で .claude/.review-approved に現ブランチ名を書き込み
+8. gh pr merge --squash --delete-branch  ← hook が .review-approved を検証して通す（→ 削除）
 9. ローカルで main を pull、issue ブランチを削除
 10. 次の open issue を選んで checkout → 実装開始（再帰的に /ship-loop）
 11. open issue が 0 になったら停止
@@ -31,7 +42,9 @@ issue 実装が完了したら必ずこのコマンドを使う。`gh pr create`
 
 ### Step 1: /simplify を実行
 
-`/simplify` スキルを呼ぶ。コードの冗長削除・整形・無駄なロジック検出を行う。指摘があれば修正する。
+`/simplify` Skill を呼ぶ。コードの冗長削除・整形・無駄なロジック検出を行う。指摘があれば修正する。
+
+> 例外：差分が「ドキュメント / CI 設定 / リネーム」のみで、コード再利用・品質・効率の観点が実質ゼロの PR では、Skill 起動の重さに見合わないので **手動チェックでスキップして良い**。スキップする場合は PR 本文で「simplify はドキュメント PR のため省略」と明記。
 
 ### Step 2: コミット & push
 
@@ -41,12 +54,13 @@ git commit -m "<conventional commit message>"
 git push -u origin "$(git symbolic-ref --short HEAD)"
 ```
 
-### Step 3: マーカー発行
+### Step 3: マーカー発行（Write tool で）
 
-```bash
-mkdir -p .claude
-git symbolic-ref --short HEAD > .claude/.simplify-done
 ```
+Write(file_path: ".claude/.simplify-done", content: "<branch-name>\n")
+```
+
+`.claude/settings.local.json` で `Write(.claude/.simplify-done)` を always allow にしておけば確認プロンプトなしで通る。Bash の `>` redirect は権限評価で詰まりやすいので使わない。
 
 ### Step 4: PR 作成
 
@@ -56,29 +70,38 @@ gh pr create --title "<title>" --body "<body>"
 
 hook が `.simplify-done` を検証 → 通過 → マーカー削除。
 
-### Step 5: /review 実行
+### Step 5: self-review（Skill `/review` は使わない）
 
-`/review <PR番号>` を呼ぶ。AI レビューが PR の diff に対して走る。
+```bash
+gh pr view <PR>      # メタ情報
+gh pr diff <PR>      # 差分
+```
 
-### Step 6: レビューループ
+これらを取得した上で、**メインターン内で**コードレビューを行う。観点:
+- 正確性 / 規約遵守 / パフォーマンス / テストカバレッジ / セキュリティ
+- CRITICAL / HIGH / MEDIUM の指摘のみ修正対象、LOW は省略
 
-`/review` の出力を確認：
+> なぜ Skill `/review` を使わないか：Skill ツールは完了時に「ターンの自然な終端」となり、Claude が応答テキストを返してそこで止まりやすい。Bash + メインターン self-review なら「judge → 即 next action」が同一ターンで連続する。
 
-- **`APPROVED` という文字列を含む** → ループを抜けて Step 7 へ（**ユーザーに確認を取らず即座に進む**）
-- **それ以外（指摘がある）** → 指摘内容を読み、修正コミット & push、Step 5 に戻る
+### Step 6: レビュー判定とループ
+
+判定結果に応じて **必ず即座に** 次のアクションを実行する。テキスト応答で止まらない。
+
+- **APPROVED** → 即 Step 7 の Write tool 呼び出しへ
+- **指摘あり** → 即 Edit/Write で修正 → `git commit & push` → Step 5 に戻る
 
 ループ最大回数: **5 回**。それを超えたら停止して人間の判断を仰ぐ。
 
-### Step 7: 承認マーカー発行
+### Step 7: 承認マーカー発行（Write tool で）
 
-```bash
-git symbolic-ref --short HEAD > .claude/.review-approved
+```
+Write(file_path: ".claude/.review-approved", content: "<branch-name>\n")
 ```
 
 ### Step 8: マージ
 
 ```bash
-gh pr merge --squash --delete-branch
+gh pr merge <PR> --squash --delete-branch
 ```
 
 hook が `.review-approved` を検証 → 通過 → マーカー削除。
@@ -88,43 +111,37 @@ hook が `.review-approved` を検証 → 通過 → マーカー削除。
 ```bash
 git checkout main
 git pull origin main
-git branch -d <feature-branch>
+git branch -d <feature-branch>   # 既に消えていればエラー無視で OK
 ```
 
 ### Step 10: 次の issue へ
 
 ```bash
-# open issue を取得
-NEXT_ISSUE=$(gh issue list --state open --json number,title --limit 1 --jq '.[0]')
-
-# 0 件なら停止
-if [ -z "$NEXT_ISSUE" ] || [ "$NEXT_ISSUE" = "null" ]; then
-  echo "✓ 全 issue 完了！停止します。"
-  exit 0
-fi
-
-# 次の issue にアサインして branch 作成
-ISSUE_NUM=$(echo "$NEXT_ISSUE" | jq -r '.number')
-ISSUE_TITLE=$(echo "$NEXT_ISSUE" | jq -r '.title')
-BRANCH_NAME="feat/issue-${ISSUE_NUM}-$(echo "$ISSUE_TITLE" | tr ' ' '-' | tr '[:upper:]' '[:lower:]' | head -c 50)"
-
-git checkout -b "$BRANCH_NAME"
+gh issue list --state open --json number,title --jq 'sort_by(.number) | .[0]'
 ```
 
-その後、issue の本文を読んで実装に着手 → 完了したら再び `/ship-loop`。
+0 件なら停止メッセージを出して終了。あれば:
+
+```bash
+git checkout -b "feat/issue-<番号>-<slug>"
+```
+
+issue 本文を読んで実装に着手 → 完了したら再び `/ship-loop`。
 
 ## 失敗時の動作
 
 - /simplify が失敗 → 停止（人間が修正）
-- /review が 5 ラウンド以上 approve しない → 停止（人間が判断）
+- self-review が 5 ラウンド以上 approve しない → 停止（人間が判断）
 - gh pr create / merge が hook で blocked → /ship-loop フローに戻ってマーカーから再発行
 - マージ衝突 → main を pull → 解消してから retry
+- 受け入れ基準が Cloudflare アカウント等の外部リソース操作を要求 → ローカルで完結する範囲を実装し、外部操作を別 issue に切り出す（例: #19）
 
 ## CLAUDE への指示（厳守）
 
 - **このワークフロー以外で `gh pr create` / `gh pr merge` を呼ばない**
-- マーカーファイルを手動で作らない（必ず /ship-loop フロー内で書き出す）
-- **`/review` が APPROVED を返したら、ユーザー確認を待たず Step 7→8→9→10 を一気通貫で実行する**（途中で応答を返して停止しない）
+- **マーカー発行は Write tool**（Bash redirect で書かない）
+- **Skill `/review` は使わない**。Bash + メインターン self-review に統一
+- **`/review` 判定後（APPROVED でも指摘ありでも）テキスト応答を返さず即座に次の tool 呼び出しを実行**
 - 5 回ループしても approve が出ない場合は人間に判断を仰ぐ
 - 全 issue が完了したら停止メッセージを出して終了
 - ユーザー個人の汎用 `/ship` skill は別物。`/ship-loop` を使うこと

@@ -4,7 +4,6 @@ on:
   push:
     branches: [main]
   pull_request:
-  workflow_dispatch:
 
 concurrency:
   group: deploy-${{ github.ref }}
@@ -40,7 +39,13 @@ jobs:
 
   deploy-preview:
     name: Deploy (Preview)
-    if: github.event_name == 'pull_request' && vars.DEPLOY_ENABLED == 'true'
+    # fork からの PR は secrets を取得できず確実に fail する（GitHub 仕様）。
+    # ノイズ回避と将来 pull_request_target へ切り替えた際の安全性のため、
+    # 同一リポジトリ内の PR のみに限定する。
+    if: |
+      github.event_name == 'pull_request'
+      && github.event.pull_request.head.repo.full_name == github.repository
+      && vars.DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read

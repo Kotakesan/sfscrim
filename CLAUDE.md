@@ -87,6 +87,7 @@
 ## ドキュメント構成
 
 - `docs/sfl-rules.md` — SFL 公式ルールまとめ（実装の根拠）
+- `docs/deployment.md` — Cloudflare Workers デプロイ手順（初回セットアップ含む）
 - `docs/architecture.md` — システム構成（作成予定）
 - `docs/api.md` — API 仕様（作成予定）
 - `docs/feature-spec/` — 機能ごとの仕様書（作成予定）

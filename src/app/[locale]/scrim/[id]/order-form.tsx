@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   CHARACTERS,
   CONTROL_TYPES,
@@ -125,7 +126,7 @@ export function OrderForm({
         </ul>
       )}
 
-      <div className="mt-5 flex items-center gap-3">
+      <div className="mt-5 flex flex-wrap items-center gap-3">
         <button
           type="button"
           onClick={onSave}
@@ -134,6 +135,12 @@ export function OrderForm({
         >
           {t("saveTeamOrder")}
         </button>
+        <Link
+          href={`/scrim/${scrimId}#preview`}
+          className="inline-flex h-11 items-center border-2 border-ink bg-transparent px-5 font-display text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-bg"
+        >
+          {t("viewPreview")} →
+        </Link>
         {!dirty && players.length === POSITIONS.length && errors.length === 0 && (
           <span className="font-mono text-xs uppercase tracking-[0.16em] text-accent">
             {t("savedLabel")}

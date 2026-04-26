@@ -81,7 +81,7 @@
     "waitingForAway": "Waiting for Away",
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "Preview",
-    "viewPreview": "View preview",
+    "viewPreview": "Preview",
     "roleEntryTitle": {
       "away": "Away: Order",
       "home": "Home: Order"
@@ -120,7 +120,7 @@
     "playerNamePlaceholder": "Player name",
     "characterPlaceholder": "Pick a character",
     "controlPlaceholder": "Control type",
-    "saveTeamOrder": "Save this team",
+    "saveTeamOrder": "Save",
     "savedLabel": "● Saved",
     "unsetTeamName": "(team name not set)",
     "emptySlot": "(empty)",

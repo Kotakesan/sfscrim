@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
   REGULAR_BATTLE_ORDER,
-  findRegularMatch,
+  findRound1Match,
   nextRegularBattle,
   pointsFor,
   regularSeasonOutcome,
@@ -11,7 +12,26 @@ import {
 } from "@/lib/scoring";
 import { SFL_RULES, type BattlePosition } from "@/config/sfl-rules";
 import { getCharacterName } from "@/config/characters";
-import { useScrimStore, type ScrimState, type Side } from "@/store/scrim";
+import {
+  useScrimStore,
+  type MatchRecord,
+  type Player,
+  type ScrimState,
+  type Side,
+} from "@/store/scrim";
+
+function formatPlayerLabel(
+  p: Player | undefined,
+  locale: string,
+  fallback: string,
+): string {
+  if (!p) return fallback;
+  const char =
+    p.characterId !== undefined
+      ? ` · ${getCharacterName(p.characterId, locale)}`
+      : "";
+  return `${p.name}${char}`;
+}
 
 export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
   const t = useTranslations("Score");
@@ -23,6 +43,8 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
   const next = nextRegularBattle(scrim.matches);
   const outcome = regularSeasonOutcome(scrim);
   const lastMatch = scrim.matches[scrim.matches.length - 1];
+  const tiebreakMatch = findRound1Match(scrim.matches, "tiebreak");
+  const showTiebreakRow = outcome.kind === "tied" || Boolean(tiebreakMatch);
 
   const onWin = (position: BattlePosition, winnerSide: Side) => {
     recordMatch(scrim.id, {
@@ -30,6 +52,15 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
       position,
       winnerSide,
       points: pointsFor(position),
+    });
+  };
+
+  const onWinTiebreak = (winnerSide: Side) => {
+    recordMatch(scrim.id, {
+      roundNo: 1,
+      position: "tiebreak",
+      winnerSide,
+      points: SFL_RULES.position.tiebreak.points,
     });
   };
 
@@ -51,6 +82,7 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
       <p className="mb-6 max-w-2xl font-mono text-xs leading-relaxed text-muted">
         {t("regularDescription", {
           max: SFL_RULES.format.regular.maxPoints,
+          tiebreak: SFL_RULES.position.tiebreak.points,
         })}
       </p>
 
@@ -72,6 +104,13 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
             onWin={onWin}
           />
         ))}
+        {showTiebreakRow && (
+          <TiebreakRow
+            scrim={scrim}
+            recorded={tiebreakMatch}
+            onWin={onWinTiebreak}
+          />
+        )}
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-line pt-5">
@@ -246,7 +285,7 @@ function BattleRow({
 }) {
   const t = useTranslations("Score");
   const locale = useLocale();
-  const recorded = findRegularMatch(scrim.matches, position);
+  const recorded = findRound1Match(scrim.matches, position);
   const points = pointsFor(position);
   const format = SFL_RULES.position[position].format;
   const homePlayer = scrim.teams.home.players.find(
@@ -255,16 +294,7 @@ function BattleRow({
   const awayPlayer = scrim.teams.away.players.find(
     (p) => p.position === position,
   );
-
-  const playerLabel = (p: typeof homePlayer): string => {
-    if (!p) return t("emptyPlayer");
-    const char =
-      p.characterId !== undefined
-        ? ` · ${getCharacterName(p.characterId, locale)}`
-        : "";
-    return `${p.name}${char}`;
-  };
-
+  const empty = t("emptyPlayer");
   const disabled = !isNext || Boolean(recorded);
 
   return (
@@ -289,7 +319,7 @@ function BattleRow({
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_120px_1fr]">
         <BattlePlayer
-          name={playerLabel(homePlayer)}
+          name={formatPlayerLabel(homePlayer, locale, empty)}
           side="home"
           isWinner={recorded?.winnerSide === "home"}
         />
@@ -315,7 +345,7 @@ function BattleRow({
           </button>
         </div>
         <BattlePlayer
-          name={playerLabel(awayPlayer)}
+          name={formatPlayerLabel(awayPlayer, locale, empty)}
           side="away"
           isWinner={recorded?.winnerSide === "away"}
         />
@@ -350,6 +380,161 @@ function BattlePlayer({
       >
         {name}
       </div>
+    </div>
+  );
+}
+
+function TiebreakRow({
+  scrim,
+  recorded,
+  onWin,
+}: {
+  scrim: ScrimState;
+  recorded: MatchRecord | undefined;
+  onWin: (winner: Side) => void;
+}) {
+  const t = useTranslations("Score");
+  const locale = useLocale();
+  const points = SFL_RULES.position.tiebreak.points;
+  const format = SFL_RULES.position.tiebreak.format;
+  const homePlayers = scrim.teams.home.players;
+  const awayPlayers = scrim.teams.away.players;
+  const empty = t("emptyPlayer");
+
+  const [homeIdx, setHomeIdx] = useState<number | undefined>(undefined);
+  const [awayIdx, setAwayIdx] = useState<number | undefined>(undefined);
+
+  const ready = homeIdx !== undefined && awayIdx !== undefined;
+  const winnerSide = recorded?.winnerSide;
+  const locked = winnerSide !== undefined;
+  const disabled = locked || !ready;
+
+  return (
+    <div className="border border-accent bg-accent-soft p-4">
+      <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+            {t("positions.tiebreak")} · {format} · +{points}pt
+          </span>
+          {winnerSide ? (
+            <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+              ● {t(`sides.${winnerSide}`)} {t("wonSuffix")}
+            </span>
+          ) : (
+            <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+              ● {t("tiebreakPickHint")}
+            </span>
+          )}
+        </div>
+      </header>
+
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_120px_1fr]">
+        <TiebreakPlayerPicker
+          side="home"
+          players={homePlayers}
+          selectedIdx={homeIdx}
+          onChange={setHomeIdx}
+          isWinner={winnerSide === "home"}
+          locked={locked}
+          locale={locale}
+          empty={empty}
+        />
+        <div className="flex flex-col items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => onWin("home")}
+            disabled={disabled}
+            className="h-9 w-full border-2 border-ink bg-transparent font-display text-xs font-semibold transition-colors hover:bg-ink hover:text-bg disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink"
+          >
+            ← {t("homeWins")}
+          </button>
+          <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+            vs
+          </span>
+          <button
+            type="button"
+            onClick={() => onWin("away")}
+            disabled={disabled}
+            className="h-9 w-full border-2 border-ink bg-transparent font-display text-xs font-semibold transition-colors hover:bg-ink hover:text-bg disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-ink"
+          >
+            {t("awayWins")} →
+          </button>
+        </div>
+        <TiebreakPlayerPicker
+          side="away"
+          players={awayPlayers}
+          selectedIdx={awayIdx}
+          onChange={setAwayIdx}
+          isWinner={winnerSide === "away"}
+          locked={locked}
+          locale={locale}
+          empty={empty}
+        />
+      </div>
+    </div>
+  );
+}
+
+function TiebreakPlayerPicker({
+  side,
+  players,
+  selectedIdx,
+  onChange,
+  isWinner,
+  locked,
+  locale,
+  empty,
+}: {
+  side: Side;
+  players: Player[];
+  selectedIdx: number | undefined;
+  onChange: (idx: number | undefined) => void;
+  isWinner: boolean;
+  locked: boolean;
+  locale: string;
+  empty: string;
+}) {
+  const t = useTranslations("Score");
+  const tOrder = useTranslations("Order");
+  const selectedLabel = formatPlayerLabel(
+    selectedIdx !== undefined ? players[selectedIdx] : undefined,
+    locale,
+    empty,
+  );
+  return (
+    <div
+      className={`border ${
+        isWinner ? "border-accent bg-accent-soft" : "border-line bg-bg"
+      } px-4 py-3`}
+    >
+      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
+        {t(`sides.${side}`)}
+      </div>
+      {locked ? (
+        <div
+          className={`mt-1 font-display text-base font-semibold ${
+            isWinner ? "text-accent" : "text-ink"
+          }`}
+        >
+          {selectedLabel}
+        </div>
+      ) : (
+        <select
+          value={selectedIdx ?? ""}
+          onChange={(e) => {
+            const v = e.target.value;
+            onChange(v === "" ? undefined : Number(v));
+          }}
+          className="mt-1 w-full bg-transparent font-display text-base font-semibold text-ink focus:outline-none"
+        >
+          <option value="">{t("tiebreakPickPlaceholder")}</option>
+          {players.map((p, i) => (
+            <option key={`${p.name}-${i}`} value={i}>
+              {formatPlayerLabel(p, locale, empty)} · {tOrder(`positions.${p.position}`)}
+            </option>
+          ))}
+        </select>
+      )}
     </div>
   );
 }

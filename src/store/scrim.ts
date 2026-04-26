@@ -124,10 +124,13 @@ export const useScrimStore = create<ScrimStore>()(
       },
       recordMatch: (id, match) => {
         set((state) => ({
-          scrims: updateScrim(state.scrims, id, (s) => ({
-            ...s,
-            matches: [...s.matches, match],
-          })),
+          scrims: updateScrim(state.scrims, id, (s) => {
+            const dup = s.matches.some(
+              (m) => m.roundNo === match.roundNo && m.position === match.position,
+            );
+            if (dup) return s;
+            return { ...s, matches: [...s.matches, match] };
+          }),
         }));
       },
       undoLastMatch: (id) => {

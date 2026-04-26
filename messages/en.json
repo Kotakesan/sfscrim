@@ -115,7 +115,7 @@
   "Score": {
     "sectionTag": "— Step 03 · Live Score",
     "sectionTitle": "Match scoring — Regular season",
-    "regularDescription": "1 section = Vanguard → Midfield → Champion in a single round. A tie (out of {max}pt) goes to a tiebreak (next issue).",
+    "regularDescription": "1 section = Vanguard → Midfield → Champion in a single round (max {max}pt). A tie goes to a tiebreak (Bo3 / +{tiebreak}pt).",
     "scoreboardTitle": "Scoreboard · Sec.1",
     "statusLabel": "Status",
     "outcomeStatus": {
@@ -144,7 +144,9 @@
     "undoLastDetail": "{position} · {winner} won",
     "undoLastNone": "no history",
     "finalize": "Finalize match → finished",
-    "tieDetectedHint": "Tied. Tiebreak +{tiebreak}pt UI will be added in the next issue.",
+    "tieDetectedHint": "Tied → enter tiebreak (+{tiebreak}pt).",
+    "tiebreakPickHint": "Pick one player per side",
+    "tiebreakPickPlaceholder": "Pick a player…",
     "historyHeaders": {
       "position": "Position",
       "format": "Format",

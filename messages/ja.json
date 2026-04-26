@@ -115,7 +115,7 @@
   "Score": {
     "sectionTag": "— Step 03 · Live Score",
     "sectionTitle": "試合進行 — レギュラーシーズン",
-    "regularDescription": "1 節 = 先鋒戦 → 中堅戦 → 大将戦の 1 巡で完結。同点（{max}pt 中）は延長戦（次 issue で対応）。",
+    "regularDescription": "1 節 = 先鋒戦 → 中堅戦 → 大将戦の 1 巡で完結（最大 {max}pt）。同点なら延長戦（Bo3 / +{tiebreak}pt）で決着。",
     "scoreboardTitle": "Scoreboard · Sec.1",
     "statusLabel": "Status",
     "outcomeStatus": {
@@ -144,7 +144,9 @@
     "undoLastDetail": "{position} · {winner} 勝",
     "undoLastNone": "履歴なし",
     "finalize": "試合を確定する → 終了",
-    "tieDetectedHint": "同点。延長戦 +{tiebreak}pt の入力 UI は次の issue で実装予定。",
+    "tieDetectedHint": "同点 → 延長戦（+{tiebreak}pt）を入力してください。",
+    "tiebreakPickHint": "両チーム 1 名ずつ選択",
+    "tiebreakPickPlaceholder": "選手を選択…",
     "historyHeaders": {
       "position": "ポジション",
       "format": "形式",

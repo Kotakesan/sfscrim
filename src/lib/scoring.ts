@@ -1,4 +1,8 @@
-import { SFL_RULES, type BattlePosition } from "@/config/sfl-rules";
+import {
+  SFL_RULES,
+  type BattlePosition,
+  type MatchPosition,
+} from "@/config/sfl-rules";
 import type { MatchRecord, ScrimState, Side } from "@/store/scrim";
 
 export const REGULAR_BATTLE_ORDER: ReadonlyArray<BattlePosition> = [
@@ -21,10 +25,10 @@ export function tallyScore(matches: ReadonlyArray<MatchRecord>): ScoreSummary {
   return summary;
 }
 
-/** 指定ポジションの match を取得（同 round / position は 1 件のみ前提） */
-export function findRegularMatch(
+/** 1 節（roundNo=1）の指定ポジション match を取得 */
+export function findRound1Match(
   matches: ReadonlyArray<MatchRecord>,
-  position: BattlePosition,
+  position: MatchPosition,
 ): MatchRecord | undefined {
   return matches.find((m) => m.roundNo === 1 && m.position === position);
 }
@@ -33,7 +37,7 @@ export function findRegularMatch(
 export function nextRegularBattle(
   matches: ReadonlyArray<MatchRecord>,
 ): BattlePosition | undefined {
-  return REGULAR_BATTLE_ORDER.find((pos) => !findRegularMatch(matches, pos));
+  return REGULAR_BATTLE_ORDER.find((pos) => !findRound1Match(matches, pos));
 }
 
 export type RegularSeasonOutcome =
@@ -46,7 +50,7 @@ export function regularSeasonOutcome(
   scrim: ScrimState,
 ): RegularSeasonOutcome {
   const allDone = REGULAR_BATTLE_ORDER.every((pos) =>
-    findRegularMatch(scrim.matches, pos),
+    findRound1Match(scrim.matches, pos),
   );
   if (!allDone) return { kind: "in_progress" };
 

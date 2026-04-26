@@ -78,6 +78,8 @@
   "Order": {
     "sectionTagOrder": "— Step 01 · Order",
     "sectionTitleOrder": "Lineup input",
+    "flowExplanation": "SFL-compliant flow: Away (lower seed) submits players & characters first → Home (higher seed) responds. Home cannot input until Away is locked.",
+    "waitingForAway": "● Waiting for Away",
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "Lineup preview",
     "sides": {

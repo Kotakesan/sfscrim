@@ -78,6 +78,8 @@
   "Order": {
     "sectionTagOrder": "— Step 01 · Order",
     "sectionTitleOrder": "オーダー入力",
+    "flowExplanation": "SFL 公式ルールに準拠：Away（下位）が先に出場選手・キャラクターを提示 → Home（上位）が応答オーダーを決定。Home 側は Away が確定するまで入力できません。",
+    "waitingForAway": "● Away 確定待ち",
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "ラインアップ・プレビュー",
     "sides": {

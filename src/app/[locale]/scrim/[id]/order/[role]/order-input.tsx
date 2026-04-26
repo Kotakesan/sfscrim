@@ -64,10 +64,6 @@ export function OrderInput({ id, role }: { id: string; role: Side }) {
         <LocaleSwitcher className="mt-2" />
       </div>
 
-      <p className="mt-6 max-w-2xl font-mono text-xs leading-relaxed text-muted">
-        {t("flowExplanation")}
-      </p>
-
       <div className="mt-8">
         <OrderForm
           scrimId={id}

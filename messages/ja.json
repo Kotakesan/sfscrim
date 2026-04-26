@@ -112,6 +112,47 @@
       "duplicateName": "プレイヤー名が重複しています：{name}"
     }
   },
+  "Score": {
+    "sectionTag": "— Step 03 · Live Score",
+    "sectionTitle": "試合進行 — レギュラーシーズン",
+    "regularDescription": "1 節 = 先鋒戦 → 中堅戦 → 大将戦の 1 巡で完結。同点（{max}pt 中）は延長戦（次 issue で対応）。",
+    "scoreboardTitle": "Scoreboard · Sec.1",
+    "statusLabel": "Status",
+    "outcomeStatus": {
+      "in_progress": "進行中",
+      "tied": "同点 → 延長戦",
+      "decided": "決着"
+    },
+    "winnerSuffix": "Winner: {name}",
+    "teamUnnamed": "未命名",
+    "positions": {
+      "vanguard": "先鋒",
+      "midfield": "中堅",
+      "champion": "大将",
+      "tiebreak": "延長戦"
+    },
+    "sides": {
+      "home": "Home",
+      "away": "Away"
+    },
+    "homeWins": "Home 勝",
+    "awayWins": "Away 勝",
+    "wonSuffix": "勝利",
+    "nextLabel": "次のバトル",
+    "emptyPlayer": "未入力",
+    "undoLast": "最後の入力を取り消す（{detail}）",
+    "undoLastDetail": "{position} · {winner} 勝",
+    "undoLastNone": "履歴なし",
+    "finalize": "試合を確定する → 終了",
+    "tieDetectedHint": "同点。延長戦 +{tiebreak}pt の入力 UI は次の issue で実装予定。",
+    "historyHeaders": {
+      "position": "ポジション",
+      "format": "形式",
+      "winner": "勝者",
+      "points": "ポイント"
+    },
+    "noWinner": "未確定"
+  },
   "Common": {
     "loading": "読み込み中…",
     "error": "エラーが発生しました",

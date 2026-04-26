@@ -112,6 +112,47 @@
       "duplicateName": "Player name is duplicated: {name}"
     }
   },
+  "Score": {
+    "sectionTag": "— Step 03 · Live Score",
+    "sectionTitle": "Match scoring — Regular season",
+    "regularDescription": "1 section = Vanguard → Midfield → Champion in a single round. A tie (out of {max}pt) goes to a tiebreak (next issue).",
+    "scoreboardTitle": "Scoreboard · Sec.1",
+    "statusLabel": "Status",
+    "outcomeStatus": {
+      "in_progress": "In progress",
+      "tied": "Tied → Tiebreak",
+      "decided": "Decided"
+    },
+    "winnerSuffix": "Winner: {name}",
+    "teamUnnamed": "(unnamed)",
+    "positions": {
+      "vanguard": "Vanguard",
+      "midfield": "Midfield",
+      "champion": "Champion",
+      "tiebreak": "Tiebreak"
+    },
+    "sides": {
+      "home": "Home",
+      "away": "Away"
+    },
+    "homeWins": "Home wins",
+    "awayWins": "Away wins",
+    "wonSuffix": "won",
+    "nextLabel": "Next battle",
+    "emptyPlayer": "(empty)",
+    "undoLast": "Undo last entry ({detail})",
+    "undoLastDetail": "{position} · {winner} won",
+    "undoLastNone": "no history",
+    "finalize": "Finalize match → finished",
+    "tieDetectedHint": "Tied. Tiebreak +{tiebreak}pt UI will be added in the next issue.",
+    "historyHeaders": {
+      "position": "Position",
+      "format": "Format",
+      "winner": "Winner",
+      "points": "Points"
+    },
+    "noWinner": "(pending)"
+  },
   "Common": {
     "loading": "Loading…",
     "error": "Something went wrong",

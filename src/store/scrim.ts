@@ -49,6 +49,8 @@ type ScrimStore = {
   setTeamName: (id: string, side: Side, name: string) => void;
   setTeamPlayers: (id: string, side: Side, players: Player[]) => void;
   setStatus: (id: string, status: ScrimStatus) => void;
+  recordMatch: (id: string, match: MatchRecord) => void;
+  undoLastMatch: (id: string) => void;
   reset: (id: string) => void;
   hasScrim: (id: string) => boolean;
   getScrim: (id: string) => ScrimState | undefined;
@@ -118,6 +120,23 @@ export const useScrimStore = create<ScrimStore>()(
       setStatus: (id, status) => {
         set((state) => ({
           scrims: updateScrim(state.scrims, id, (s) => ({ ...s, status })),
+        }));
+      },
+      recordMatch: (id, match) => {
+        set((state) => ({
+          scrims: updateScrim(state.scrims, id, (s) => ({
+            ...s,
+            matches: [...s.matches, match],
+          })),
+        }));
+      },
+      undoLastMatch: (id) => {
+        set((state) => ({
+          scrims: updateScrim(state.scrims, id, (s) => ({
+            ...s,
+            matches: s.matches.slice(0, -1),
+            // status を draft/in_progress に戻すかは workspace 側で判断
+          })),
         }));
       },
       reset: (id) => {

@@ -7,6 +7,7 @@ import { useScrimStore, type ScrimState } from "@/store/scrim";
 import type { FormatMode } from "@/config/sfl-rules";
 import { OrderForm } from "./order-form";
 import { LineupPreview } from "./lineup-preview";
+import { RegularSeasonScoring } from "./match-scoring";
 
 const FORMAT_OPTIONS: ReadonlyArray<FormatMode> = [
   "regular",
@@ -125,6 +126,10 @@ export function ScrimWorkspace({ id }: { id: string }) {
         </h2>
         <LineupPreview home={scrim.teams.home} away={scrim.teams.away} />
       </section>
+
+      {scrim.status !== "draft" && scrim.format === "regular" && (
+        <RegularSeasonScoring scrim={scrim} />
+      )}
 
       <section className="mt-12 border-t-2 border-ink pt-6">
         {scrim.status === "in_progress" && (

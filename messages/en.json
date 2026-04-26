@@ -1,0 +1,18 @@
+{
+  "Meta": {
+    "appName": "SFScrim",
+    "tagline": "Team battle operations for SFL — official ruleset"
+  },
+  "Home": {
+    "title": "SFScrim",
+    "subtitle": "Team battle operations for SFL — official ruleset",
+    "description": "Stop typing lineups by hand mid-stream. SFL-compliant lineup management for vanguard / midfield / champion, home & away, mandatory appearance tracking, and 4v4.",
+    "ctaCreate": "Create a scrim",
+    "ctaLogin": "Sign in to save history"
+  },
+  "Common": {
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "retry": "Retry"
+  }
+}

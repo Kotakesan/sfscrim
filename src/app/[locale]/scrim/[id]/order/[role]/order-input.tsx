@@ -47,12 +47,20 @@ export function OrderInput({ id, role }: { id: string; role: Side }) {
     <main className="mx-auto max-w-[820px] flex-1 px-6 py-10 md:px-8 md:py-12">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <Link
-            href={`/scrim/${id}`}
-            className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted hover:text-ink"
-          >
-            ← {t("backToDashboard")}
-          </Link>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+            <Link
+              href={`/scrim/${id}`}
+              className="hover:text-ink"
+            >
+              ← {t("backToDashboard")}
+            </Link>
+            <Link
+              href={`/scrim/${id}#preview`}
+              className="text-accent hover:text-ink"
+            >
+              {t("viewPreview")} →
+            </Link>
+          </div>
           <h1 className="mt-3 font-display text-4xl font-extrabold tracking-[-0.02em]">
             {t(`roleEntryTitle.${role}`)}
           </h1>

@@ -99,7 +99,7 @@ export function ScrimWorkspace({ id }: { id: string }) {
         </section>
       )}
 
-      <section className="mt-12">
+      <section id="preview" className="mt-12 scroll-mt-8">
         <div className="mb-4 font-mono text-[11px] uppercase tracking-[0.24em] text-accent">
           {tOrder("sectionTagPreview")}
         </div>

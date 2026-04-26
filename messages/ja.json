@@ -71,7 +71,6 @@
       "finished": "終了"
     },
     "createdAtLabel": "作成日時",
-    "emptyHint": "オーダー入力 / スコア記録 UI は後続 issue で追加されます。今は ID とフォーマットのみ保持。リロードしても状態は localStorage に保持されます。",
     "backToHome": "ホームへ戻る",
     "resetScrim": "このスクリムを破棄"
   },
@@ -106,7 +105,7 @@
     "emptySlot": "未入力",
     "startScrim": "オーダー確定 → 試合開始",
     "startScrimHint": "両チームの先鋒・中堅・大将を入力するとボタンが有効になります。",
-    "inProgressNotice": "オーダー確定済。試合進行 UI（スコア入力 / 巡目反復）は Issue #7 / #8 で追加されます。",
+    "inProgressNotice": "オーダー確定済。下のスコア入力で試合進行を記録できます。",
     "errors": {
       "requiredPosition": "{position} の選手名が未入力です。",
       "duplicateName": "プレイヤー名が重複しています：{name}"

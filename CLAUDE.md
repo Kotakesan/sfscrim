@@ -36,6 +36,10 @@
 
 `/ship-loop` は完了後、自動で次の open issue を checkout して再帰的に走る。**open issue が 0 件になったら停止**。
 
+### 画面変更 PR はスクリーンショット必須
+
+ページ追加 / route 追加 / UI 変更を含む PR は **Playwright MCP で撮ったスクショを PR に必ず含める**。`docs/screenshots/issue-{N}/*.png` にコミットし、PR 本文で `raw.githubusercontent.com` URL で参照する。詳細は `.claude/commands/ship-loop.md` Step 1.5 を参照。
+
 ### 🛑 Claude が止まる罠と対策（最重要）
 
 過去のセッションで **Skill ツール（/simplify や /review）から戻った直後にテキスト応答を返してターン終了** という失敗が複数回発生している。Skill 戻りは Claude にとって「ターンの自然な終端」に見えるが、ship-loop は自動継続を期待しているのでこれが致命的。

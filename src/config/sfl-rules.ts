@@ -12,7 +12,7 @@ export const SFL_RULES = {
   format: {
     regular: { maxPoints: 40, hasTiebreak: true },
     playoff: { winPoints: 70, maxRounds: 4 },
-    grandFinal: { winPoints: 90, maxRounds: 4 },
+    final: { winPoints: 90, maxRounds: 4 },
   },
 } as const;
 

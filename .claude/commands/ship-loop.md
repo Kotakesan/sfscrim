@@ -46,6 +46,21 @@ issue 実装が完了したら必ずこのコマンドを使う。`gh pr create`
 
 > 例外：差分が「ドキュメント / CI 設定 / リネーム」のみで、コード再利用・品質・効率の観点が実質ゼロの PR では、Skill 起動の重さに見合わないので **手動チェックでスキップして良い**。スキップする場合は PR 本文で「simplify はドキュメント PR のため省略」と明記。
 
+### Step 1.5: 画面変更がある PR はスクリーンショット必須
+
+ページ追加 / route 追加 / UI コンポーネント変更 / レイアウト変更が含まれる PR は、**Playwright MCP でスクショを取って PR に含める**。
+
+手順:
+1. `pnpm dev` を background で起動
+2. `mcp__playwright__browser_navigate` → `mcp__playwright__browser_take_screenshot` で必要画面を撮影
+3. `docs/screenshots/issue-{N}/{場面名}.png` に保存（リポジトリにコミット）
+4. PR 本文で `![desc](https://raw.githubusercontent.com/Kotakesan/sfscrim/{branch}/docs/screenshots/issue-{N}/foo.png)` 形式で参照
+5. dev サーバを停止
+
+撮るカット例：主要画面 / モバイル幅（880px 以下）/ 多言語切替（ja & en）/ エラー状態。
+
+「画面変更なし」（schema / CI / docs / lib のみ）の PR ではスクショ不要。
+
 ### Step 2: コミット & push
 
 ```bash

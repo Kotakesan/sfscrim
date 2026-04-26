@@ -55,6 +55,25 @@
     "footerTagline": "BUILT FOR THE FGC",
     "footerDisclaimer": "NOT AFFILIATED W/ CAPCOM"
   },
+  "Scrim": {
+    "scrimLabel": "Scrim ID",
+    "formatLabel": "Format",
+    "formats": {
+      "regular": "Regular",
+      "playoff": "Playoff",
+      "final": "Grand Final"
+    },
+    "metaLabel": "Meta",
+    "statusLabel": "Status",
+    "statuses": {
+      "in_progress": "In progress",
+      "finished": "Finished"
+    },
+    "createdAtLabel": "Created at",
+    "emptyHint": "Lineup input / score tracking UI will be added in follow-up issues. For now only ID and format are persisted. Reloading keeps state via localStorage.",
+    "backToHome": "Back to home",
+    "resetScrim": "Discard this scrim"
+  },
   "Common": {
     "loading": "Loading…",
     "error": "Something went wrong",

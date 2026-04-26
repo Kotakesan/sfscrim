@@ -1,4 +1,5 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { SFL_RULES } from "@/config/sfl-rules";
 
 const FEATURE_KEYS = ["order", "rules", "fourVsFour", "i18n"] as const;
@@ -40,7 +41,7 @@ export default async function Home({
     },
     {
       label: t("stats.finalWin"),
-      value: `${SFL_RULES.format.grandFinal.winPoints}`,
+      value: `${SFL_RULES.format.final.winPoints}`,
       accent: true,
     },
   ];
@@ -98,12 +99,12 @@ export default async function Home({
               {t("heroLead")}
             </p>
             <div className="flex flex-wrap gap-3">
-              <a
-                href="#"
+              <Link
+                href="/scrim/new"
                 className="inline-flex h-[50px] items-center gap-2.5 border-2 border-accent bg-accent px-6 font-display text-sm font-semibold text-bg transition-colors hover:border-ink hover:bg-ink"
               >
                 {t("ctaCreate")}
-              </a>
+              </Link>
               <a
                 href="#"
                 className="inline-flex h-[50px] items-center gap-2.5 border-2 border-ink bg-transparent px-6 font-display text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-bg"

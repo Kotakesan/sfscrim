@@ -71,7 +71,6 @@
       "finished": "Finished"
     },
     "createdAtLabel": "Created at",
-    "emptyHint": "Lineup input / score tracking UI will be added in follow-up issues. For now only ID and format are persisted. Reloading keeps state via localStorage.",
     "backToHome": "Back to home",
     "resetScrim": "Discard this scrim"
   },
@@ -106,7 +105,7 @@
     "emptySlot": "(empty)",
     "startScrim": "Lock lineup → Start match",
     "startScrimHint": "Fill in vanguard / midfield / champion for both teams to enable.",
-    "inProgressNotice": "Lineup locked. Score tracking / round iteration UI will be added in #7 / #8.",
+    "inProgressNotice": "Lineup locked. Use the score input below to record match progress.",
     "errors": {
       "requiredPosition": "Player name for {position} is empty.",
       "duplicateName": "Player name is duplicated: {name}"

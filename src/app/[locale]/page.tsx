@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SFL_RULES } from "@/config/sfl-rules";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 
 const FEATURE_KEYS = ["order", "rules", "fourVsFour", "i18n"] as const;
 
@@ -68,9 +69,12 @@ export default async function Home({
                 {t("navHelp")}
               </a>
             </nav>
-            <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
-              {t("navSignIn")}
-            </span>
+            <div className="flex items-center gap-4">
+              <LocaleSwitcher />
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+                {t("navSignIn")}
+              </span>
+            </div>
           </div>
         </div>
       </header>

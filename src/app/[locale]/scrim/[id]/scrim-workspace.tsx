@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useScrimStore, type ScrimState } from "@/store/scrim";
 import type { FormatMode } from "@/config/sfl-rules";
+import { LocaleSwitcher } from "@/components/locale-switcher";
 import { OrderForm } from "./order-form";
 import { LineupPreview } from "./lineup-preview";
 import { RegularSeasonScoring } from "./match-scoring";
@@ -46,12 +47,17 @@ export function ScrimWorkspace({ id }: { id: string }) {
 
   return (
     <main className="mx-auto max-w-[1320px] flex-1 px-8 py-12">
-      <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-        {t("scrimLabel")}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+            {t("scrimLabel")}
+          </div>
+          <h1 className="mt-2 font-display text-5xl font-extrabold tracking-[-0.02em]">
+            #<span className="text-accent">{scrim.id}</span>
+          </h1>
+        </div>
+        <LocaleSwitcher className="mt-2" />
       </div>
-      <h1 className="mt-2 font-display text-5xl font-extrabold tracking-[-0.02em]">
-        #<span className="text-accent">{scrim.id}</span>
-      </h1>
 
       <div className="mt-10 grid gap-8 md:grid-cols-2">
         <section>

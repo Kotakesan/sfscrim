@@ -18,9 +18,9 @@
     "ctaCreate": "Create a scrim →",
     "ctaSaveHistory": "Save history",
     "stats": {
-      "vanguard": "Vanguard / VG",
-      "midfield": "Midfield / Mid",
-      "champion": "Champion",
+      "vanguard": "1st",
+      "midfield": "2nd",
+      "champion": "3rd",
       "regularMax": "Sec. Max — Reg.",
       "playoffWin": "First to — Playoff",
       "finalWin": "First to — Final"
@@ -33,7 +33,7 @@
       "order": {
         "num": "No. 01 — Order",
         "title": "Lineup management",
-        "desc": "Vanguard / midfield / champion + tiebreak player. Away-first → home response is automated."
+        "desc": "1st / 2nd / 3rd + tiebreak player. Away-first → home response is automated."
       },
       "rules": {
         "num": "No. 02 — Rules",
@@ -107,9 +107,9 @@
       "away": "Away"
     },
     "positions": {
-      "vanguard": "Vanguard",
-      "midfield": "Midfield",
-      "champion": "Champion",
+      "vanguard": "1st",
+      "midfield": "2nd",
+      "champion": "3rd",
       "sub": "Tiebreak"
     },
     "controlTypes": {
@@ -135,7 +135,7 @@
   "Score": {
     "sectionTag": "— Step 03 · Live Score",
     "sectionTitle": "Match scoring — Regular season",
-    "regularDescription": "1 section = Vanguard → Midfield → Champion in a single round (max {max}pt). A tie goes to a tiebreak (Bo3 / +{tiebreak}pt).",
+    "regularDescription": "1 section = 1st → 2nd → 3rd in a single round (max {max}pt). A tie goes to a tiebreak (Bo3 / +{tiebreak}pt).",
     "scoreboardTitle": "Scoreboard · Sec.1",
     "statusLabel": "Status",
     "outcomeStatus": {
@@ -146,9 +146,9 @@
     "winnerSuffix": "Winner: {name}",
     "teamUnnamed": "(unnamed)",
     "positions": {
-      "vanguard": "Vanguard",
-      "midfield": "Midfield",
-      "champion": "Champion",
+      "vanguard": "1st",
+      "midfield": "2nd",
+      "champion": "3rd",
       "tiebreak": "Tiebreak"
     },
     "sides": {

@@ -33,7 +33,7 @@
       "order": {
         "num": "No. 01 — Order",
         "title": "オーダー管理",
-        "desc": "先鋒・中堅・大将＋控え。アウェイ先出し → ホーム応答も自動化。"
+        "desc": "先鋒・中堅・大将＋延長戦要員。アウェイ先出し → ホーム応答も自動化。"
       },
       "rules": {
         "num": "No. 02 — Rules",
@@ -89,7 +89,7 @@
       "vanguard": "先鋒",
       "midfield": "中堅",
       "champion": "大将",
-      "sub": "控え"
+      "sub": "延長戦"
     },
     "controlTypes": {
       "classic": "クラシック",
@@ -144,8 +144,7 @@
     "undoLastNone": "履歴なし",
     "finalize": "試合を確定する → 終了",
     "tieDetectedHint": "同点 → 延長戦（+{tiebreak}pt）を入力してください。",
-    "tiebreakPickHint": "両チーム 1 名ずつ選択",
-    "tiebreakPickPlaceholder": "選手を選択…",
+    "tiebreakSubMissing": "両チームの延長戦要員を登録してください",
     "historyHeaders": {
       "position": "ポジション",
       "format": "形式",

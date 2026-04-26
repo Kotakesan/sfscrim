@@ -55,3 +55,6 @@ next-env.d.ts
 
 # claude code session-local
 .claude/settings.local.json
+
+# playwright mcp run artifacts (snapshots / console logs)
+/.playwright-mcp/

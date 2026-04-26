@@ -82,16 +82,16 @@
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "Lineup preview",
     "roleEntryTitle": {
-      "away": "Enter as Away",
-      "home": "Enter as Home"
+      "away": "Away: Order",
+      "home": "Home: Order"
     },
     "roleEntryDesc": {
       "away": "Lower seed. Submits players & characters first.",
       "home": "Higher seed. Responds after seeing Away's lineup."
     },
     "roleEntryCta": {
-      "away": "Open Away input",
-      "home": "Open Home input"
+      "away": "Open input",
+      "home": "Open input"
     },
     "copyUrl": "Copy URL",
     "copyUrlCopied": "● Copied",

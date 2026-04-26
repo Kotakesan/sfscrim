@@ -81,7 +81,7 @@
     "waitingForAway": "Away 確定待ち",
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "プレビュー",
-    "viewPreview": "プレビューを確認",
+    "viewPreview": "プレビュー",
     "roleEntryTitle": {
       "away": "Away: オーダー",
       "home": "Home: オーダー"
@@ -120,7 +120,7 @@
     "playerNamePlaceholder": "プレイヤー名",
     "characterPlaceholder": "キャラ未選択",
     "controlPlaceholder": "操作タイプ",
-    "saveTeamOrder": "このチームを保存",
+    "saveTeamOrder": "保存",
     "savedLabel": "● Saved",
     "unsetTeamName": "チーム名未設定",
     "emptySlot": "未入力",

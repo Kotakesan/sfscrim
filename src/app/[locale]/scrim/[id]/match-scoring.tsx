@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
   REGULAR_BATTLE_ORDER,
@@ -397,16 +396,13 @@ function TiebreakRow({
   const locale = useLocale();
   const points = SFL_RULES.position.tiebreak.points;
   const format = SFL_RULES.position.tiebreak.format;
-  const homePlayers = scrim.teams.home.players;
-  const awayPlayers = scrim.teams.away.players;
+  const homeSub = scrim.teams.home.players.find((p) => p.position === "sub");
+  const awaySub = scrim.teams.away.players.find((p) => p.position === "sub");
   const empty = t("emptyPlayer");
 
-  const [homeIdx, setHomeIdx] = useState<number | undefined>(undefined);
-  const [awayIdx, setAwayIdx] = useState<number | undefined>(undefined);
-
-  const ready = homeIdx !== undefined && awayIdx !== undefined;
   const winnerSide = recorded?.winnerSide;
   const locked = winnerSide !== undefined;
+  const ready = Boolean(homeSub && awaySub);
   const disabled = locked || !ready;
 
   return (
@@ -420,24 +416,19 @@ function TiebreakRow({
             <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
               ● {t(`sides.${winnerSide}`)} {t("wonSuffix")}
             </span>
-          ) : (
+          ) : !ready ? (
             <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
-              ● {t("tiebreakPickHint")}
+              ● {t("tiebreakSubMissing")}
             </span>
-          )}
+          ) : null}
         </div>
       </header>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_120px_1fr]">
-        <TiebreakPlayerPicker
+        <BattlePlayer
+          name={formatPlayerLabel(homeSub, locale, empty)}
           side="home"
-          players={homePlayers}
-          selectedIdx={homeIdx}
-          onChange={setHomeIdx}
           isWinner={winnerSide === "home"}
-          locked={locked}
-          locale={locale}
-          empty={empty}
         />
         <div className="flex flex-col items-center justify-center gap-2">
           <button
@@ -460,81 +451,13 @@ function TiebreakRow({
             {t("awayWins")} →
           </button>
         </div>
-        <TiebreakPlayerPicker
+        <BattlePlayer
+          name={formatPlayerLabel(awaySub, locale, empty)}
           side="away"
-          players={awayPlayers}
-          selectedIdx={awayIdx}
-          onChange={setAwayIdx}
           isWinner={winnerSide === "away"}
-          locked={locked}
-          locale={locale}
-          empty={empty}
         />
       </div>
     </div>
   );
 }
 
-function TiebreakPlayerPicker({
-  side,
-  players,
-  selectedIdx,
-  onChange,
-  isWinner,
-  locked,
-  locale,
-  empty,
-}: {
-  side: Side;
-  players: Player[];
-  selectedIdx: number | undefined;
-  onChange: (idx: number | undefined) => void;
-  isWinner: boolean;
-  locked: boolean;
-  locale: string;
-  empty: string;
-}) {
-  const t = useTranslations("Score");
-  const tOrder = useTranslations("Order");
-  const selectedLabel = formatPlayerLabel(
-    selectedIdx !== undefined ? players[selectedIdx] : undefined,
-    locale,
-    empty,
-  );
-  return (
-    <div
-      className={`border ${
-        isWinner ? "border-accent bg-accent-soft" : "border-line bg-bg"
-      } px-4 py-3`}
-    >
-      <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-        {t(`sides.${side}`)}
-      </div>
-      {locked ? (
-        <div
-          className={`mt-1 font-display text-base font-semibold ${
-            isWinner ? "text-accent" : "text-ink"
-          }`}
-        >
-          {selectedLabel}
-        </div>
-      ) : (
-        <select
-          value={selectedIdx ?? ""}
-          onChange={(e) => {
-            const v = e.target.value;
-            onChange(v === "" ? undefined : Number(v));
-          }}
-          className="mt-1 w-full bg-transparent font-display text-base font-semibold text-ink focus:outline-none"
-        >
-          <option value="">{t("tiebreakPickPlaceholder")}</option>
-          {players.map((p, i) => (
-            <option key={`${p.name}-${i}`} value={i}>
-              {formatPlayerLabel(p, locale, empty)} · {tOrder(`positions.${p.position}`)}
-            </option>
-          ))}
-        </select>
-      )}
-    </div>
-  );
-}

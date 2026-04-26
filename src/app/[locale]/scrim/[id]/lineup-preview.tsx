@@ -4,7 +4,7 @@ import { useTranslations, useLocale } from "next-intl";
 import { getCharacterName } from "@/config/characters";
 import type { Team } from "@/store/scrim";
 
-import type { PlayerSlot } from "@/config/sfl-rules";
+import { SFL_RULES, type PlayerSlot } from "@/config/sfl-rules";
 
 const POSITION_ORDER: ReadonlyArray<PlayerSlot> = [
   "vanguard",
@@ -14,10 +14,10 @@ const POSITION_ORDER: ReadonlyArray<PlayerSlot> = [
 ];
 
 const POSITION_FORMAT: Record<PlayerSlot, string> = {
-  vanguard: "Bo3",
-  midfield: "Bo3",
-  champion: "Bo5",
-  sub: "—",
+  vanguard: SFL_RULES.position.vanguard.format,
+  midfield: SFL_RULES.position.midfield.format,
+  champion: SFL_RULES.position.champion.format,
+  sub: SFL_RULES.position.tiebreak.format,
 };
 
 export function LineupPreview({ home, away }: { home: Team; away: Team }) {

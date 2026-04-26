@@ -33,7 +33,7 @@
       "order": {
         "num": "No. 01 — Order",
         "title": "Lineup management",
-        "desc": "Vanguard / midfield / champion + sub. Away-first → home response is automated."
+        "desc": "Vanguard / midfield / champion + tiebreak player. Away-first → home response is automated."
       },
       "rules": {
         "num": "No. 02 — Rules",
@@ -89,7 +89,7 @@
       "vanguard": "Vanguard",
       "midfield": "Midfield",
       "champion": "Champion",
-      "sub": "Sub"
+      "sub": "Tiebreak"
     },
     "controlTypes": {
       "classic": "Classic",
@@ -144,8 +144,7 @@
     "undoLastNone": "no history",
     "finalize": "Finalize match → finished",
     "tieDetectedHint": "Tied → enter tiebreak (+{tiebreak}pt).",
-    "tiebreakPickHint": "Pick one player per side",
-    "tiebreakPickPlaceholder": "Pick a player…",
+    "tiebreakSubMissing": "Register a tiebreak player on both teams",
     "historyHeaders": {
       "position": "Position",
       "format": "Format",

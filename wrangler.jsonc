@@ -12,14 +12,13 @@
     "enabled": true
   },
   // Cloudflare D1 (SQLite) binding.
-  // ローカル開発は `--local` で動作するため database_id は placeholder のままで OK。
-  // 本番デプロイ前に `pnpm wrangler d1 create sfscrim-db` を実行し、
-  // 出力された database_id をここに貼り替える。
+  // ローカルは `--local` で .wrangler/state/v3/d1 配下の SQLite を使う。
+  // 本番 ID は `wrangler d1 create sfscrim-db` で発行済（APAC region）。
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "sfscrim-db",
-      "database_id": "PLACEHOLDER_RUN_WRANGLER_D1_CREATE",
+      "database_id": "9f54f5e0-e01d-44c6-a063-62320a76fd0e",
       "migrations_dir": "migrations"
     }
   ],

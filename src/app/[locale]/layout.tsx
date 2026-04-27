@@ -10,7 +10,7 @@ import {
   OG_LOCALE,
   type Locale,
 } from "@/i18n/routing";
-import { SITE } from "@/config/site";
+import { SITE, isDevEnv } from "@/config/site";
 import "../globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -42,6 +42,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "Meta" });
   const canonical = localeHref(locale);
   const ogLocale = OG_LOCALE[locale as Locale] ?? OG_LOCALE[routing.defaultLocale];
+  const dev = await isDevEnv();
 
   return {
     metadataBase: METADATA_BASE,
@@ -51,6 +52,7 @@ export async function generateMetadata({
     },
     description: t("description"),
     applicationName: t("siteName"),
+    ...(dev ? { robots: { index: false, follow: false } } : {}),
     alternates: {
       canonical,
       languages: LANGUAGES,

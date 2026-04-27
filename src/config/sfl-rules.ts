@@ -19,6 +19,12 @@ export const SFL_RULES = {
 // 通常バトルの 3 ポジション（先鋒・中堅・大将）
 export type BattlePosition = "vanguard" | "midfield" | "champion";
 
+export const BATTLE_POSITIONS = [
+  "vanguard",
+  "midfield",
+  "champion",
+] as const satisfies readonly BattlePosition[];
+
 // 選手登録用：通常 3 ポジション + 控え
 export type PlayerSlot = BattlePosition | "sub";
 

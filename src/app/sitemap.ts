@@ -1,11 +1,14 @@
 import type { MetadataRoute } from "next";
 import { buildLanguageAlternates } from "@/i18n/routing";
-import { SITE } from "@/config/site";
+import { SITE, isDevEnv } from "@/config/site";
+
+export const dynamic = "force-dynamic";
 
 const LAST_MODIFIED = "2026-04-28";
 const LANGUAGES = buildLanguageAlternates(SITE.url);
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  if (await isDevEnv()) return [];
   return [
     {
       url: `${SITE.url}/`,

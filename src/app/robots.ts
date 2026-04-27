@@ -1,7 +1,14 @@
 import type { MetadataRoute } from "next";
-import { SITE } from "@/config/site";
+import { SITE, isDevEnv } from "@/config/site";
 
-export default function robots(): MetadataRoute.Robots {
+export const dynamic = "force-dynamic";
+
+export default async function robots(): Promise<MetadataRoute.Robots> {
+  if (await isDevEnv()) {
+    return {
+      rules: { userAgent: "*", disallow: "/" },
+    };
+  }
   return {
     rules: [
       {

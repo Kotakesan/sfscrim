@@ -13,6 +13,22 @@
 
 **issue 実装後は必ず `/ship-loop` コマンドを使う。`gh pr create` / `gh pr merge` の直接実行は hook で禁止されている。**
 
+### ブランチ運用（本番リリース後）
+
+本番リリース済のため Git Flow ベースの 2 段階デプロイ:
+
+```
+feature/* / chore/* / fix/*  ← develop から切る
+        ↓ PR (base: develop)
+     develop  ── push で sfscrim-dev.sf6.workers.dev に自動デプロイ
+        ↓ PR (base: main, 本番反映タイミングで人間が判断)
+       main   ── push で sfscrim.sf6.workers.dev = 本番に自動デプロイ
+```
+
+- **ship-loop の base は常に `develop`**。`gh pr create --base develop` を使う
+- 本番反映は別途 `gh pr create --base main --head develop --title "release: ..."` を人間が立てる
+- 本番 D1: `sfscrim-db` / 開発 D1: `sfscrim-db-dev`（独立、データ汚染なし）
+
 > ⚠️ ユーザー個人の汎用 `/ship` skill（PR 作成までで停止する別物）と区別するため、本プロジェクトでは **`/ship-loop`** を使う。`/ship` を呼ぶと個人版が起動して merge → 次 issue checkout まで進まないので注意。
 
 ### `/ship-loop` の流れ
@@ -48,7 +64,7 @@
 1. **Skill `/review` を使わない**。Bash で `gh pr view <PR>` + `gh pr diff <PR>` を取得して、**メインターン内で self-review** する
 2. **マーカー発行は Write tool**（Bash の `>` redirect は権限プロンプトで止まりやすい）。`.claude/settings.local.json` の `permissions.allow` に `Write(.claude/.simplify-done)` / `Write(.claude/.review-approved)` を入れて always allow にしておく
 3. **判定後（APPROVED でも指摘ありでも）テキスト応答を返さず即座に次の tool 呼び出しを実行**
-   - APPROVED → 即 Write tool で `.review-approved` → `gh pr merge` → main 同期 → 次 issue checkout
+   - APPROVED → 即 Write tool で `.review-approved` → `gh pr merge` → develop 同期 → 次 issue checkout
    - 指摘あり → 即 Edit/Write で修正 → `git commit & push` → 再 self-review
 
 詳細は `.claude/commands/ship-loop.md` を参照。
@@ -56,7 +72,7 @@
 ### 二段防御
 
 - **ローカル層**: hook がマーカー検証 → `gh pr create/merge` を制御
-- **GitHub 層**: `main` ブランチ保護で **CI（lint / typecheck / build）必須** → CI 落ちたらマージ不可
+- **GitHub 層**: `main` / `develop` ブランチ保護で **CI（lint / typecheck / build）必須** → CI 落ちたらマージ不可
 
 `.github/workflows/ci.yml` が PR ごとに 3 ジョブを走らせる：
 - `lint` (`pnpm lint`)

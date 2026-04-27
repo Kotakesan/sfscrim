@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   pull_request:
 
 concurrency:
@@ -12,8 +12,8 @@ concurrency:
 jobs:
   deploy-prod:
     name: Deploy (Production)
-    # 本番 secrets / D1 ID / DEPLOY_ENABLED が揃うまではスキップ。
-    # docs/deployment.md の手順を実施した後 vars.DEPLOY_ENABLED = "true" にすると有効化される。
+    # main への push で本番 (sfscrim.sf6.workers.dev) にデプロイ。
+    # vars.DEPLOY_ENABLED = "true" + secrets が揃っていることが条件。
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.DEPLOY_ENABLED == 'true'
     runs-on: ubuntu-latest
     permissions:
@@ -30,18 +30,44 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Build (OpenNext for Cloudflare)
         run: pnpm exec opennextjs-cloudflare build
-      - name: Deploy to Cloudflare Workers
+      - name: Deploy to Cloudflare Workers (production)
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: deploy
 
+  deploy-dev:
+    name: Deploy (Development)
+    # develop への push で開発環境 (sfscrim-dev.sf6.workers.dev) にデプロイ。
+    # 本番 D1 とは別の sfscrim-db-dev に向くので、データ汚染なし。
+    if: github.event_name == 'push' && github.ref == 'refs/heads/develop' && vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build (OpenNext for Cloudflare)
+        run: pnpm exec opennextjs-cloudflare build
+      - name: Deploy to Cloudflare Workers (development)
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy --env development
+
   deploy-preview:
     name: Deploy (Preview)
-    # fork からの PR は secrets を取得できず確実に fail する（GitHub 仕様）。
-    # ノイズ回避と将来 pull_request_target へ切り替えた際の安全性のため、
-    # 同一リポジトリ内の PR のみに限定する。
+    # PR ごとに versions upload で preview URL を発行。
+    # fork からの PR は secrets を取得できず確実に fail するので除外。
     if: |
       github.event_name == 'pull_request'
       && github.event.pull_request.head.repo.full_name == github.repository

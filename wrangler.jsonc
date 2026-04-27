@@ -11,7 +11,7 @@
   "observability": {
     "enabled": true
   },
-  // Cloudflare D1 (SQLite) binding.
+  // Cloudflare D1 (SQLite) binding — production.
   // ローカルは `--local` で .wrangler/state/v3/d1 配下の SQLite を使う。
   // 本番 ID は `wrangler d1 create sfscrim-db` で発行済（APAC region）。
   "d1_databases": [
@@ -24,5 +24,25 @@
   ],
   "vars": {
     "APP_ENV": "production"
+  },
+  // Cloudflare Workers の environment 機能で開発環境を分離。
+  // `wrangler deploy --env development` で sfscrim-dev worker としてデプロイされ、
+  // https://sfscrim-dev.sf6.workers.dev で配信される。
+  // 本番 D1 とは別の sfscrim-db-dev に向ける（本番データ保護）。
+  "env": {
+    "development": {
+      "name": "sfscrim-dev",
+      "d1_databases": [
+        {
+          "binding": "DB",
+          "database_name": "sfscrim-db-dev",
+          "database_id": "62f2fb9a-f04b-4723-9edc-f2b438daf380",
+          "migrations_dir": "migrations"
+        }
+      ],
+      "vars": {
+        "APP_ENV": "development"
+      }
+    }
   }
 }

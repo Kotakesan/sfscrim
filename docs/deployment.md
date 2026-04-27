@@ -16,12 +16,22 @@ GitHub PR open    ──▶ .github/workflows/deploy.yml
                                                                           └─ PR にコメントで preview URL 通知
 ```
 
-| ジョブ | トリガー | 動作 |
-|---|---|---|
-| `deploy-prod` | `push` to `main` | `pnpm exec opennextjs-cloudflare build` → `wrangler deploy` |
-| `deploy-preview` | `pull_request` | 上記 build → `wrangler versions upload` → preview URL を PR にコメント |
+| ジョブ | トリガー | 動作 | デプロイ先 |
+|---|---|---|---|
+| `deploy-prod` | `push` to `main` | `pnpm exec opennextjs-cloudflare build` → `wrangler deploy` | `sfscrim.sf6.workers.dev` (本番) |
+| `deploy-dev` | `push` to `develop` | 同上 → `wrangler deploy --env development` | `sfscrim-dev.sf6.workers.dev` (開発環境) |
+| `deploy-preview` | `pull_request` | 上記 build → `wrangler versions upload` → preview URL を PR にコメント | preview URL (一時) |
 
-両ジョブとも **`vars.DEPLOY_ENABLED == 'true'`** が無いとスキップされます（ガード）。
+全ジョブとも **`vars.DEPLOY_ENABLED == 'true'`** が無いとスキップされます（ガード）。
+
+### 環境隔離
+
+| 環境 | Worker name | D1 database_name | D1 UUID |
+|---|---|---|---|
+| 本番 (main) | `sfscrim` | `sfscrim-db` | `9f54f5e0-e01d-44c6-a063-62320a76fd0e` |
+| 開発 (develop) | `sfscrim-dev` | `sfscrim-db-dev` | `62f2fb9a-f04b-4723-9edc-f2b438daf380` |
+
+本番 D1 と開発 D1 は完全に独立しており、開発環境での操作は本番データに影響しません。
 
 ---
 
@@ -84,6 +94,12 @@ pnpm wrangler d1 create sfscrim-db
 
 ```bash
 pnpm db:migrate:prod
+```
+
+開発環境の D1 (`sfscrim-db-dev`) には:
+
+```bash
+pnpm db:migrate:dev
 ```
 
 ### 5. 初回デプロイ確認

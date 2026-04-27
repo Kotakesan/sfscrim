@@ -1,7 +1,22 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { isRole } from "@/lib/order-state";
 import { OrderInput } from "./order-input";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; id: string; role: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "Meta" });
+  return {
+    title: t("orderInput.title"),
+    description: t("orderInput.description"),
+    robots: { index: false, follow: false },
+  };
+}
 
 export default async function OrderInputPage({
   params,

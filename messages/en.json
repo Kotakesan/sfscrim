@@ -1,7 +1,19 @@
 {
   "Meta": {
     "appName": "SFScrim",
-    "tagline": "Scrim operations tool for SF6 team battles"
+    "tagline": "Scrim operations tool for SF6 team battles",
+    "titleTemplate": "%s — SFScrim",
+    "description": "SFScrim is a scrim operations tool for SF6 team battles. Lineup input, home & away flow, and victory point tracking — all in the browser, fully aligned with the official SFL ruleset.",
+    "ogImageAlt": "SFScrim — Scrim operations tool for SF6 team battles",
+    "siteName": "SFScrim",
+    "scrim": {
+      "title": "Scrim dashboard",
+      "description": "Manage lineups, match progression, and victory points for your scrim."
+    },
+    "orderInput": {
+      "title": "Lineup input",
+      "description": "Enter the 1st / 2nd / 3rd lineup plus the tiebreak player."
+    }
   },
   "Landing": {
     "navScrim": "Scrim",

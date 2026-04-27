@@ -136,6 +136,12 @@ export function ScrimWorkspace({ id }: { id: string }) {
           >
             {t("backToHome")}
           </Link>
+          <Link
+            href={`/scrim/${id}/broadcast`}
+            className="inline-flex h-12 items-center border-2 border-ink bg-transparent px-6 font-display text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-bg"
+          >
+            {t("openBroadcast")} →
+          </Link>
           <button
             type="button"
             onClick={() => reset(id)}

@@ -13,6 +13,10 @@
     "orderInput": {
       "title": "オーダー入力",
       "description": "先鋒・中堅・大将＋延長戦要員のオーダーを入力します。"
+    },
+    "broadcast": {
+      "title": "配信ビュー",
+      "description": "配信用に最適化したスコア・ラインナップ表示。ホーム未発表ポジは自動で伏せます。"
     }
   },
   "Landing": {
@@ -84,7 +88,8 @@
     },
     "createdAtLabel": "作成日時",
     "backToHome": "ホームへ戻る",
-    "resetScrim": "このスクリムを破棄"
+    "resetScrim": "このスクリムを破棄",
+    "openBroadcast": "配信ビュー"
   },
   "Order": {
     "sectionTagOrder": "— Step 01 · Order",
@@ -216,5 +221,11 @@
     "loading": "読み込み中…",
     "error": "エラーが発生しました",
     "retry": "再試行"
+  },
+  "Broadcast": {
+    "badge": "配信ビュー",
+    "backToDashboard": "ダッシュボードへ戻る",
+    "hint": "ホーム側の未発表ポジションは自動で「未発表」表示にマスクされます。OBS 等で画面取込みしてもオーダーは漏れません。",
+    "notFound": "対象のスクリムが見つかりません。"
   }
 }

@@ -11,6 +11,7 @@ import {
   type RegularSeasonOutcome,
 } from "@/lib/scoring";
 import { formatPlayerLabel } from "@/lib/player-format";
+import { isPositionCommittedAt } from "@/lib/order-state";
 import {
   SFL_RULES,
   type BattlePosition,
@@ -284,10 +285,13 @@ function LineupSideBlock({
   next: BattlePosition | undefined;
 }) {
   const t = useTranslations("Score");
+  const tOrder = useTranslations("Order");
   const locale = useLocale();
   const empty = t("emptyPlayer");
   const teamName = team.name || t("teamUnnamed");
   const playerByPos = new Map(team.players.map((p) => [p.position, p]));
+  // ホーム未発表ポジは戦略情報。DOM 自体に player 名を出さず「未発表」だけ表示する
+  const maskUnannounced = side === "home";
 
   return (
     <div>
@@ -296,14 +300,21 @@ function LineupSideBlock({
         <span className="font-display text-xs font-bold text-ink">{teamName}</span>
       </div>
       <div className="space-y-2">
-        {REGULAR_BATTLE_ORDER.map((pos) => (
-          <LineupRow
-            key={pos}
-            position={pos}
-            name={formatPlayerLabel(playerByPos.get(pos), locale, empty)}
-            state={rowStateFor(side, pos, matchIndex, next)}
-          />
-        ))}
+        {REGULAR_BATTLE_ORDER.map((pos) => {
+          const announced = isPositionCommittedAt(team.players, pos);
+          const visible = !maskUnannounced || announced;
+          const name = visible
+            ? formatPlayerLabel(playerByPos.get(pos), locale, empty)
+            : tOrder("notAnnounced");
+          return (
+            <LineupRow
+              key={pos}
+              position={pos}
+              name={name}
+              state={rowStateFor(side, pos, matchIndex, next)}
+            />
+          );
+        })}
       </div>
     </div>
   );

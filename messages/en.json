@@ -13,6 +13,10 @@
     "orderInput": {
       "title": "Lineup input",
       "description": "Enter the 1st / 2nd / 3rd lineup plus the tiebreak player."
+    },
+    "broadcast": {
+      "title": "Broadcast view",
+      "description": "Stream-optimized scoreboard & lineup. Home's un-announced positions are auto-masked."
     }
   },
   "Landing": {
@@ -84,7 +88,8 @@
     },
     "createdAtLabel": "Created at",
     "backToHome": "Back to home",
-    "resetScrim": "Discard this scrim"
+    "resetScrim": "Discard this scrim",
+    "openBroadcast": "Broadcast view"
   },
   "Order": {
     "sectionTagOrder": "— Step 01 · Order",
@@ -216,5 +221,11 @@
     "loading": "Loading…",
     "error": "Something went wrong",
     "retry": "Retry"
+  },
+  "Broadcast": {
+    "badge": "Broadcast view",
+    "backToDashboard": "Back to dashboard",
+    "hint": "Home's un-announced positions are auto-masked. Safe to capture in OBS without leaking lineup info.",
+    "notFound": "Scrim not found."
   }
 }

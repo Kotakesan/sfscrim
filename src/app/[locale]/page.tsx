@@ -79,7 +79,7 @@ export default async function Home({
         </div>
       </header>
 
-      <section className="pt-[120px] pb-[60px]">
+      <section className="pt-10 pb-[60px]">
         <div className="mx-auto max-w-[1320px] px-8">
           <div className="mb-8 flex flex-wrap items-center gap-3.5 font-mono text-[11px] uppercase tracking-[0.2em] text-muted">
             <span className="bg-accent px-2.5 py-1 font-bold tracking-[0.16em] text-bg">

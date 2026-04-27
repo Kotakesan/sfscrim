@@ -89,7 +89,7 @@
   "Order": {
     "sectionTagOrder": "— Step 01 · Order",
     "sectionTitleOrder": "Lineup input",
-    "flowExplanation": "Official-ruleset flow: Away (lower seed) submits players & characters first → Home (higher seed) responds. Home cannot input until Away is locked.",
+    "flowExplanation": "Away submits players & characters first → Home responds. Home cannot input until Away is locked.",
     "waitingForAway": "Waiting for Away",
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "Preview",
@@ -99,8 +99,8 @@
       "home": "Home: Order"
     },
     "roleEntryDesc": {
-      "away": "Lower seed. Submits players & characters first.",
-      "home": "Higher seed. Responds after seeing Away's lineup."
+      "away": "Submits players & characters first.",
+      "home": "Responds after seeing Away's lineup."
     },
     "roleEntryCta": {
       "away": "Open input",

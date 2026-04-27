@@ -89,7 +89,7 @@
   "Order": {
     "sectionTagOrder": "— Step 01 · Order",
     "sectionTitleOrder": "オーダー入力",
-    "flowExplanation": "公式リーグルール準拠：Away（下位）が先に出場選手・キャラクターを提示 → Home（上位）が応答オーダーを決定。Home 側は Away が確定するまで入力できません。",
+    "flowExplanation": "Away が先に出場選手・キャラクターを提示 → Home が応答オーダーを決定。Home 側は Away が確定するまで入力できません。",
     "waitingForAway": "Away 確定待ち",
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "プレビュー",
@@ -99,8 +99,8 @@
       "home": "Home: オーダー"
     },
     "roleEntryDesc": {
-      "away": "下位チーム。先に出場選手・キャラクターを提示します。",
-      "home": "上位チーム。Away のオーダーを見てから応答します。"
+      "away": "先に出場選手・キャラクターを提示します。",
+      "home": "Away のオーダーを見てから応答します。"
     },
     "roleEntryCta": {
       "away": "オーダー入力へ",

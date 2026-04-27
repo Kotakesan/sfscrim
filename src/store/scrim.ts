@@ -16,6 +16,8 @@ export type Player = {
   position: PlayerSlot;
   characterId?: number;
   controlType?: ControlType;
+  // ホーム逐次申告フローで使用。未指定（旧 schema）は name の有無で判定する後方互換挙動
+  committed?: boolean;
 };
 
 export type Team = {
@@ -48,6 +50,9 @@ type ScrimStore = {
   setFormat: (id: string, format: FormatMode) => void;
   setTeamName: (id: string, side: Side, name: string) => void;
   setTeamPlayers: (id: string, side: Side, players: Player[]) => void;
+  commitPosition: (id: string, side: Side, position: PlayerSlot) => void;
+  uncommitPosition: (id: string, side: Side, position: PlayerSlot) => void;
+  commitAllPositions: (id: string, side: Side) => void;
   setStatus: (id: string, status: ScrimStatus) => void;
   recordMatch: (id: string, match: MatchRecord) => void;
   undoLastMatch: (id: string) => void;
@@ -113,6 +118,55 @@ export const useScrimStore = create<ScrimStore>()(
             teams: {
               ...s.teams,
               [side]: { ...s.teams[side], players },
+            },
+          })),
+        }));
+      },
+      commitPosition: (id, side, position) => {
+        set((state) => ({
+          scrims: updateScrim(state.scrims, id, (s) => ({
+            ...s,
+            teams: {
+              ...s.teams,
+              [side]: {
+                ...s.teams[side],
+                players: s.teams[side].players.map((p) =>
+                  p.position === position ? { ...p, committed: true } : p,
+                ),
+              },
+            },
+          })),
+        }));
+      },
+      uncommitPosition: (id, side, position) => {
+        set((state) => ({
+          scrims: updateScrim(state.scrims, id, (s) => ({
+            ...s,
+            teams: {
+              ...s.teams,
+              [side]: {
+                ...s.teams[side],
+                players: s.teams[side].players.map((p) =>
+                  p.position === position ? { ...p, committed: false } : p,
+                ),
+              },
+            },
+          })),
+        }));
+      },
+      commitAllPositions: (id, side) => {
+        set((state) => ({
+          scrims: updateScrim(state.scrims, id, (s) => ({
+            ...s,
+            teams: {
+              ...s.teams,
+              [side]: {
+                ...s.teams[side],
+                players: s.teams[side].players.map((p) => ({
+                  ...p,
+                  committed: true,
+                })),
+              },
             },
           })),
         }));

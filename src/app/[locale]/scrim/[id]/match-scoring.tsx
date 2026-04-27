@@ -16,6 +16,7 @@ import {
   type Side,
 } from "@/store/scrim";
 import { formatPlayerLabel } from "@/lib/player-format";
+import { findPlayer, isPositionCommittedAt } from "@/lib/order-state";
 import { LiveDashboard } from "./live-dashboard";
 
 export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
@@ -148,21 +149,25 @@ function BattleRow({
   onWin: (position: BattlePosition, side: Side) => void;
 }) {
   const t = useTranslations("Score");
+  const tOrder = useTranslations("Order");
   const locale = useLocale();
+  const commitPosition = useScrimStore((s) => s.commitPosition);
   const recorded = findRound1Match(scrim.matches, position);
   const points = pointsFor(position);
   const format = SFL_RULES.position[position].format;
-  const homePlayer = scrim.teams.home.players.find(
-    (p) => p.position === position,
-  );
-  const awayPlayer = scrim.teams.away.players.find(
-    (p) => p.position === position,
-  );
+  const homePlayer = findPlayer(scrim.teams.home.players, position);
+  const awayPlayer = findPlayer(scrim.teams.away.players, position);
+  const homeAnnounced = isPositionCommittedAt(scrim.teams.home.players, position);
+  const awaitingHome = isNext && !recorded && !homeAnnounced;
   const empty = t("emptyPlayer");
-  const disabled = !isNext || Boolean(recorded);
+  const disabled = !isNext || Boolean(recorded) || awaitingHome;
 
   return (
-    <div className="border border-line bg-bg-2 p-4">
+    <div
+      className={`border bg-bg-2 p-4 ${
+        awaitingHome ? "border-accent" : "border-line"
+      }`}
+    >
       <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <div>
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
@@ -173,9 +178,17 @@ function BattleRow({
               ● {t(`sides.${recorded.winnerSide}`)} {t("wonSuffix")}
             </span>
           )}
-          {!recorded && isNext && (
+          {!recorded && isNext && !awaitingHome && (
             <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
               ● {t("nextLabel")}
+            </span>
+          )}
+          {awaitingHome && (
+            <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+              ●{" "}
+              {t("homeNotCommitted", {
+                position: t(`positions.${position}`),
+              })}
             </span>
           )}
         </div>
@@ -183,7 +196,11 @@ function BattleRow({
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_120px_1fr]">
         <BattlePlayer
-          name={formatPlayerLabel(homePlayer, locale, empty)}
+          name={
+            homeAnnounced
+              ? formatPlayerLabel(homePlayer, locale, empty)
+              : tOrder("notAnnounced")
+          }
           side="home"
           isWinner={recorded?.winnerSide === "home"}
         />
@@ -214,6 +231,20 @@ function BattleRow({
           isWinner={recorded?.winnerSide === "away"}
         />
       </div>
+
+      {awaitingHome && homePlayer && homePlayer.name.trim().length > 0 && (
+        <div className="mt-3 border-t border-line pt-3">
+          <button
+            type="button"
+            onClick={() => commitPosition(scrim.id, "home", position)}
+            className="inline-flex h-9 items-center border-2 border-accent bg-accent px-4 font-display text-xs font-semibold text-bg transition-colors hover:border-ink hover:bg-ink"
+          >
+            {tOrder("announceCta", {
+              position: tOrder(`positions.${position}`),
+            })}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

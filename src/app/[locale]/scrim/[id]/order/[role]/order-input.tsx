@@ -71,6 +71,7 @@ export function OrderInput({ id, role }: { id: string; role: Side }) {
           teamName={scrim.teams[role].name}
           players={scrim.teams[role].players}
           locked={homeLocked}
+          mode={role === "home" ? "sequential" : "bulk"}
         />
       </div>
 

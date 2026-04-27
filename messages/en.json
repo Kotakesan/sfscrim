@@ -184,7 +184,27 @@
       "winner": "Winner",
       "points": "Points"
     },
-    "noWinner": "(pending)"
+    "noWinner": "(pending)",
+    "live": {
+      "barId": "Scrim #{id}",
+      "section": "Sec.1",
+      "liveOn": "● LIVE",
+      "liveOff": "○ READY",
+      "liveDone": "● DECIDED",
+      "scoreboardTitle": "Scoreboard",
+      "scoreboardSubtitle": "SFL · Regular · Sec.1",
+      "lineupTitle": "Lineup",
+      "lineupSubtitle": "Sec.1",
+      "metaWonBy": "{side} +{pts}",
+      "metaPending": "Pending",
+      "metaTied": "+{pts}",
+      "rowResultWon": "Win +{pts}",
+      "rowResultLost": "Lose +0",
+      "rowResultNext": "+{pts} →",
+      "rowResultPending": "—",
+      "tiebreakLabel": "Tied → Tiebreak",
+      "tiebreakNeeded": "Awaiting tiebreak"
+    }
   },
   "Common": {
     "loading": "Loading…",

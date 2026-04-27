@@ -7,30 +7,16 @@ import {
   nextRegularBattle,
   pointsFor,
   regularSeasonOutcome,
-  tallyScore,
 } from "@/lib/scoring";
 import { SFL_RULES, type BattlePosition } from "@/config/sfl-rules";
-import { getCharacterName } from "@/config/characters";
 import {
   useScrimStore,
   type MatchRecord,
-  type Player,
   type ScrimState,
   type Side,
 } from "@/store/scrim";
-
-function formatPlayerLabel(
-  p: Player | undefined,
-  locale: string,
-  fallback: string,
-): string {
-  if (!p) return fallback;
-  const char =
-    p.characterId !== undefined
-      ? ` · ${getCharacterName(p.characterId, locale)}`
-      : "";
-  return `${p.name}${char}`;
-}
+import { formatPlayerLabel } from "@/lib/player-format";
+import { LiveDashboard } from "./live-dashboard";
 
 export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
   const t = useTranslations("Score");
@@ -38,7 +24,6 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
   const undoLast = useScrimStore((s) => s.undoLastMatch);
   const setStatus = useScrimStore((s) => s.setStatus);
 
-  const score = tallyScore(scrim.matches);
   const next = nextRegularBattle(scrim.matches);
   const outcome = regularSeasonOutcome(scrim);
   const lastMatch = scrim.matches[scrim.matches.length - 1];
@@ -85,13 +70,7 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
         })}
       </p>
 
-      <Scoreboard
-        homeName={scrim.teams.home.name}
-        awayName={scrim.teams.away.name}
-        score={score}
-        outcome={outcome}
-        scrim={scrim}
-      />
+      <LiveDashboard scrim={scrim} />
 
       <div className="mt-6 grid gap-3">
         {REGULAR_BATTLE_ORDER.map((pos) => (
@@ -155,120 +134,6 @@ function lastMatchTokens(
       winner: t(`sides.${m.winnerSide as Side}`),
     }),
   };
-}
-
-function Scoreboard({
-  homeName,
-  awayName,
-  score,
-  outcome,
-  scrim,
-}: {
-  homeName: string;
-  awayName: string;
-  score: { home: number; away: number };
-  outcome: ReturnType<typeof regularSeasonOutcome>;
-  scrim: ScrimState;
-}) {
-  const t = useTranslations("Score");
-  const max = SFL_RULES.format.regular.maxPoints;
-  const leadingSide: Side | undefined =
-    outcome.kind === "decided"
-      ? outcome.winner
-      : score.home === score.away
-        ? undefined
-        : score.home > score.away
-          ? "home"
-          : "away";
-
-  return (
-    <div className="border-2 border-ink bg-bg">
-      <div className="flex items-center justify-between border-b border-line bg-bg-3 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-2">
-        <span>{t("scoreboardTitle")}</span>
-        <span>
-          {t("statusLabel")}:{" "}
-          <b className="text-accent">
-            {t(`outcomeStatus.${outcome.kind}`)}
-            {outcome.kind === "decided" &&
-              ` · ${t("winnerSuffix", { name: outcome.winner === "home" ? homeName : awayName })}`}
-          </b>
-        </span>
-      </div>
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 p-7 text-center">
-        <ScoreCell name={homeName} value={score.home} max={max} highlighted={leadingSide === "home"} />
-        <span className="font-mono text-xl text-muted">vs</span>
-        <ScoreCell name={awayName} value={score.away} max={max} highlighted={leadingSide === "away"} />
-      </div>
-      <MatchHistory scrim={scrim} />
-    </div>
-  );
-}
-
-function ScoreCell({
-  name,
-  value,
-  max,
-  highlighted,
-}: {
-  name: string;
-  value: number;
-  max: number;
-  highlighted: boolean;
-}) {
-  const t = useTranslations("Score");
-  return (
-    <div>
-      <div className="font-display text-xl font-bold tracking-[-0.01em]">
-        {name || t("teamUnnamed")}
-      </div>
-      <div
-        className={`mt-2 font-display text-7xl font-extrabold leading-none tracking-[-0.03em] ${
-          highlighted ? "text-accent" : "text-ink"
-        }`}
-      >
-        {value}
-      </div>
-      <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-        / {max}
-      </div>
-    </div>
-  );
-}
-
-function MatchHistory({ scrim }: { scrim: ScrimState }) {
-  const t = useTranslations("Score");
-  if (scrim.matches.length === 0) return null;
-
-  return (
-    <div className="border-t border-line">
-      <div className="grid grid-cols-4 gap-2 border-b border-line bg-bg-2 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-        <span>{t("historyHeaders.position")}</span>
-        <span>{t("historyHeaders.format")}</span>
-        <span>{t("historyHeaders.winner")}</span>
-        <span className="text-right">{t("historyHeaders.points")}</span>
-      </div>
-      {scrim.matches.map((m, i) => {
-        const pos = m.position as BattlePosition | "tiebreak";
-        return (
-          <div
-            key={`${m.roundNo}-${m.position}-${i}`}
-            className="grid grid-cols-4 gap-2 px-4 py-2 font-mono text-xs"
-          >
-            <span className="text-ink-2">{t(`positions.${pos}`)}</span>
-            <span className="text-muted">{SFL_RULES.position[pos].format}</span>
-            <span className="text-ink-2">
-              {m.winnerSide
-                ? t(`sides.${m.winnerSide}`)
-                : t("noWinner")}
-            </span>
-            <span className="text-right font-bold text-accent">
-              +{m.points}
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
 }
 
 function BattleRow({
@@ -460,4 +325,3 @@ function TiebreakRow({
     </div>
   );
 }
-

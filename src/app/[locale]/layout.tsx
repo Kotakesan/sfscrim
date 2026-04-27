@@ -3,7 +3,14 @@ import { Bricolage_Grotesque, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { routing } from "@/i18n/routing";
+import {
+  routing,
+  localeHref,
+  buildLanguageAlternates,
+  OG_LOCALE,
+  type Locale,
+} from "@/i18n/routing";
+import { SITE } from "@/config/site";
 import "../globals.css";
 
 const bricolage = Bricolage_Grotesque({
@@ -19,6 +26,9 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
+const METADATA_BASE = new URL(SITE.url);
+const LANGUAGES = buildLanguageAlternates();
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
@@ -30,9 +40,43 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Meta" });
+  const canonical = localeHref(locale);
+  const ogLocale = OG_LOCALE[locale as Locale] ?? OG_LOCALE[routing.defaultLocale];
+
   return {
-    title: t("appName"),
-    description: t("tagline"),
+    metadataBase: METADATA_BASE,
+    title: {
+      default: t("appName"),
+      template: t("titleTemplate"),
+    },
+    description: t("description"),
+    applicationName: t("siteName"),
+    alternates: {
+      canonical,
+      languages: LANGUAGES,
+    },
+    openGraph: {
+      type: "website",
+      siteName: t("siteName"),
+      title: t("appName"),
+      description: t("description"),
+      url: canonical,
+      locale: ogLocale,
+      images: [
+        {
+          url: SITE.ogImagePath,
+          width: SITE.ogImageWidth,
+          height: SITE.ogImageHeight,
+          alt: t("ogImageAlt"),
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("appName"),
+      description: t("description"),
+      images: [SITE.ogImagePath],
+    },
   };
 }
 

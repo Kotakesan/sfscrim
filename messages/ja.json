@@ -1,7 +1,19 @@
 {
   "Meta": {
     "appName": "SFScrim",
-    "tagline": "SF6 のスクリム運営ツール"
+    "tagline": "SF6 のスクリム運営ツール",
+    "titleTemplate": "%s — SFScrim",
+    "description": "SFScrim は SF6 のスクリム運営ツール。オーダー入力、ホーム＆アウェイ、勝利ポイントの管理を Web で完結。SFL 公式ルール準拠で、配信中の手入力を不要に。",
+    "ogImageAlt": "SFScrim — SF6 のスクリム運営ツール",
+    "siteName": "SFScrim",
+    "scrim": {
+      "title": "スクリム ダッシュボード",
+      "description": "スクリムのオーダー入力、試合進行、勝利ポイントを管理します。"
+    },
+    "orderInput": {
+      "title": "オーダー入力",
+      "description": "先鋒・中堅・大将＋延長戦要員のオーダーを入力します。"
+    }
   },
   "Landing": {
     "navScrim": "Scrim",

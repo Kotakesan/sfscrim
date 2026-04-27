@@ -100,7 +100,7 @@ export default async function RootLayout({
       lang={locale}
       className={`${bricolage.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-sans overflow-x-clip">
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>

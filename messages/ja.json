@@ -184,7 +184,27 @@
       "winner": "勝者",
       "points": "ポイント"
     },
-    "noWinner": "未確定"
+    "noWinner": "未確定",
+    "live": {
+      "barId": "Scrim #{id}",
+      "section": "1 節",
+      "liveOn": "● LIVE",
+      "liveOff": "○ READY",
+      "liveDone": "● DECIDED",
+      "scoreboardTitle": "Scoreboard",
+      "scoreboardSubtitle": "SFL · レギュラー · 1 節",
+      "lineupTitle": "Lineup",
+      "lineupSubtitle": "1 節",
+      "metaWonBy": "{side} 勝 +{pts}",
+      "metaPending": "未確定",
+      "metaTied": "+{pts}",
+      "rowResultWon": "勝 +{pts}",
+      "rowResultLost": "負 +0",
+      "rowResultNext": "+{pts} →",
+      "rowResultPending": "—",
+      "tiebreakLabel": "同点 → 延長戦",
+      "tiebreakNeeded": "延長戦待ち"
+    }
   },
   "Common": {
     "loading": "読み込み中…",

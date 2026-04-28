@@ -44,7 +44,7 @@ export function BroadcastView({ id }: { id: string }) {
         </Link>
       </header>
 
-      <LiveDashboard scrim={scrim} />
+      <LiveDashboard scrim={scrim} interactive={false} />
 
       <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
         {tBroadcast("hint")}

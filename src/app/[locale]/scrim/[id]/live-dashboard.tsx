@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   REGULAR_BATTLE_ORDER,
   nextRegularBattle,
@@ -55,7 +56,14 @@ function leadingSideFor(
   return score.home > score.away ? "home" : "away";
 }
 
-export function LiveDashboard({ scrim }: { scrim: ScrimState }) {
+export function LiveDashboard({
+  scrim,
+  interactive = true,
+}: {
+  scrim: ScrimState;
+  /** false なら配信ビュー等で操作 UI（未発表ポジから入力画面へのリンク等）を出さない */
+  interactive?: boolean;
+}) {
   const t = useTranslations("Score");
 
   const matchIndex = buildMatchIndex(scrim.matches);
@@ -96,7 +104,12 @@ export function LiveDashboard({ scrim }: { scrim: ScrimState }) {
           matchIndex={matchIndex}
           outcome={outcome}
         />
-        <LineupPanel scrim={scrim} matchIndex={matchIndex} next={next} />
+        <LineupPanel
+          scrim={scrim}
+          matchIndex={matchIndex}
+          next={next}
+          interactive={interactive}
+        />
       </div>
     </div>
   );
@@ -245,10 +258,12 @@ function LineupPanel({
   scrim,
   matchIndex,
   next,
+  interactive,
 }: {
   scrim: ScrimState;
   matchIndex: MatchIndex;
   next: BattlePosition | undefined;
+  interactive: boolean;
 }) {
   const t = useTranslations("Score");
   const sides: ReadonlyArray<Side> = ["home", "away"];
@@ -266,6 +281,8 @@ function LineupPanel({
             team={scrim.teams[side]}
             matchIndex={matchIndex}
             next={next}
+            scrimId={scrim.id}
+            interactive={interactive}
           />
         ))}
       </div>
@@ -278,11 +295,15 @@ function LineupSideBlock({
   team,
   matchIndex,
   next,
+  scrimId,
+  interactive,
 }: {
   side: Side;
   team: ScrimState["teams"]["home"];
   matchIndex: MatchIndex;
   next: BattlePosition | undefined;
+  scrimId: string;
+  interactive: boolean;
 }) {
   const t = useTranslations("Score");
   const tOrder = useTranslations("Order");
@@ -306,12 +327,19 @@ function LineupSideBlock({
           const name = visible
             ? formatPlayerLabel(playerByPos.get(pos), locale, empty)
             : tOrder("notAnnounced");
+          // ホーム未発表ポジは入力画面へのショートカットを出す（broadcast view では出さない）
+          const linkHref =
+            interactive && maskUnannounced && !announced
+              ? `/scrim/${scrimId}/order/home`
+              : undefined;
           return (
             <LineupRow
               key={pos}
               position={pos}
               name={name}
               state={rowStateFor(side, pos, matchIndex, next)}
+              linkHref={linkHref}
+              linkTitle={tOrder("notAnnouncedJumpHint")}
             />
           );
         })}
@@ -351,16 +379,32 @@ function LineupRow({
   position,
   name,
   state,
+  linkHref,
+  linkTitle,
 }: {
   position: BattlePosition;
   name: string;
   state: PositionRowState;
+  linkHref?: string;
+  linkTitle?: string;
 }) {
   const t = useTranslations("Score");
   const format = SFL_RULES.position[position].format;
   const isNext = state.kind === "next";
   const stat = rowStatLabel(state, t);
   const statClass = rowStatTone(state) === "accent" ? "text-accent" : "text-muted";
+
+  const nameNode = linkHref ? (
+    <Link
+      href={linkHref}
+      title={linkTitle}
+      className="underline decoration-accent decoration-2 underline-offset-4 hover:text-accent"
+    >
+      {name}
+    </Link>
+  ) : (
+    name
+  );
 
   return (
     <div
@@ -373,7 +417,7 @@ function LineupRow({
           {t(`positions.${position}`)} · {format}
           {isNext ? ` · ${t("nextLabel")}` : ""}
         </div>
-        <div className="mt-0.5 font-display text-sm font-semibold">{name}</div>
+        <div className="mt-0.5 font-display text-sm font-semibold">{nameNode}</div>
       </div>
       <div className={`font-mono text-xs font-bold ${statClass}`}>{stat}</div>
     </div>

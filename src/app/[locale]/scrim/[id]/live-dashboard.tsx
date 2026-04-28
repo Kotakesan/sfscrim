@@ -86,8 +86,8 @@ export function LiveDashboard({
 
   return (
     <div className="border-2 border-ink bg-bg">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink bg-bg-3 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-2">
-        <span>
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-ink bg-bg-3 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-2 sm:justify-between">
+        <span className="break-all">
           {t("live.barId", { id: scrim.id })} · {t("live.section")}
         </span>
         <span>
@@ -145,7 +145,7 @@ function ScoreboardPanel({
 
   return (
     <section className="border border-line bg-bg">
-      <div className="flex items-center justify-between border-b border-line px-4 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-line px-4 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted sm:justify-between">
         <span>{t("live.scoreboardTitle")}</span>
         <span>{t("live.scoreboardSubtitle")}</span>
       </div>
@@ -269,7 +269,7 @@ function LineupPanel({
   const sides: ReadonlyArray<Side> = ["home", "away"];
   return (
     <section className="border border-line bg-bg">
-      <div className="flex items-center justify-between border-b border-line px-4 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1 border-b border-line px-4 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-muted sm:justify-between">
         <span>{t("live.lineupTitle")}</span>
         <span>{t("live.lineupSubtitle")}</span>
       </div>

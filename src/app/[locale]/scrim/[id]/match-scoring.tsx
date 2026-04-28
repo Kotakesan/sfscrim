@@ -169,33 +169,31 @@ function BattleRow({
         awaitingHome ? "border-accent" : "border-line"
       }`}
     >
-      <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-            {t(`positions.${position}`)} · {format} · +{points}pt
+      <header className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
+        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+          {t(`positions.${position}`)} · {format} · +{points}pt
+        </span>
+        {recorded?.winnerSide && (
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+            ● {t(`sides.${recorded.winnerSide}`)} {t("wonSuffix")}
           </span>
-          {recorded?.winnerSide && (
-            <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
-              ● {t(`sides.${recorded.winnerSide}`)} {t("wonSuffix")}
-            </span>
-          )}
-          {!recorded && isNext && !awaitingHome && (
-            <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
-              ● {t("nextLabel")}
-            </span>
-          )}
-          {awaitingHome && (
-            <Link
-              href={`/scrim/${scrim.id}/order/home`}
-              className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent underline decoration-2 underline-offset-4 hover:text-ink"
-            >
-              ●{" "}
-              {t("homeNotCommitted", {
-                position: t(`positions.${position}`),
-              })}
-            </Link>
-          )}
-        </div>
+        )}
+        {!recorded && isNext && !awaitingHome && (
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+            ● {t("nextLabel")}
+          </span>
+        )}
+        {awaitingHome && (
+          <Link
+            href={`/scrim/${scrim.id}/order/home`}
+            className="inline-flex items-center border border-accent bg-accent-soft px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-accent transition-colors hover:bg-accent hover:text-bg"
+          >
+            {t("homeNotCommitted", {
+              position: t(`positions.${position}`),
+            })}{" "}
+            →
+          </Link>
+        )}
       </header>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_120px_1fr]">

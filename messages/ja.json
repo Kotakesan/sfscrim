@@ -99,6 +99,7 @@
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "プレビュー",
     "viewPreview": "プレビュー",
+    "previewSaveHint": "先に「保存」を押してからプレビューに進んでください。",
     "roleEntryTitle": {
       "away": "Away: オーダー",
       "home": "Home: オーダー"

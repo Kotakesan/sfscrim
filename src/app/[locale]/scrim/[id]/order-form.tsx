@@ -174,12 +174,11 @@ export function OrderForm({
             {t("saveTeamOrder")}
           </button>
         )}
-        <Link
-          href={`/scrim/${scrimId}#preview`}
-          className="inline-flex h-11 items-center border-2 border-ink bg-transparent px-5 font-display text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-bg"
-        >
-          {t("viewPreview")} →
-        </Link>
+        <PreviewLink
+          scrimId={scrimId}
+          enabled={isSequential || (!dirty && errors.length === 0)}
+          t={t}
+        />
         {!isSequential &&
           !dirty &&
           players.length === POSITIONS.length &&
@@ -190,6 +189,37 @@ export function OrderForm({
           )}
       </div>
     </section>
+  );
+}
+
+type PreviewLinkProps = {
+  scrimId: string;
+  enabled: boolean;
+  t: ReturnType<typeof useTranslations<"Order">>;
+};
+
+function PreviewLink({ scrimId, enabled, t }: PreviewLinkProps) {
+  const baseClass =
+    "inline-flex h-11 items-center border-2 border-ink bg-transparent px-5 font-display text-sm font-semibold text-ink transition-colors";
+  if (enabled) {
+    return (
+      <Link
+        href={`/scrim/${scrimId}#preview`}
+        className={`${baseClass} hover:bg-ink hover:text-bg`}
+      >
+        {t("viewPreview")} →
+      </Link>
+    );
+  }
+  return (
+    <span
+      role="link"
+      aria-disabled="true"
+      title={t("previewSaveHint")}
+      className={`${baseClass} cursor-not-allowed opacity-40`}
+    >
+      {t("viewPreview")} →
+    </span>
   );
 }
 

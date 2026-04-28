@@ -99,6 +99,7 @@
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "Preview",
     "viewPreview": "Preview",
+    "previewSaveHint": "Save the lineup first, then preview.",
     "roleEntryTitle": {
       "away": "Away: Order",
       "home": "Home: Order"

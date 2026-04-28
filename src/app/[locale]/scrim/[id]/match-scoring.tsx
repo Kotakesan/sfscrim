@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   REGULAR_BATTLE_ORDER,
   findRound1Match,
@@ -184,12 +185,15 @@ function BattleRow({
             </span>
           )}
           {awaitingHome && (
-            <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+            <Link
+              href={`/scrim/${scrim.id}/order/home`}
+              className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent underline decoration-2 underline-offset-4 hover:text-ink"
+            >
               ●{" "}
               {t("homeNotCommitted", {
                 position: t(`positions.${position}`),
               })}
-            </span>
+            </Link>
           )}
         </div>
       </header>

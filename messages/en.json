@@ -143,6 +143,7 @@
     "unsetTeamName": "(team name not set)",
     "emptySlot": "(empty)",
     "notAnnounced": "(not announced)",
+    "notAnnouncedJumpHint": "Click to open Home's lineup input",
     "sequentialIntro": "Home announces one position at a time. Announce 1st → after 1st battle, announce 2nd → and so on.",
     "announceCta": "Announce {position}",
     "announcedLabel": "● Announced",

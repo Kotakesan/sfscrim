@@ -143,6 +143,7 @@
     "unsetTeamName": "チーム名未設定",
     "emptySlot": "未入力",
     "notAnnounced": "未発表",
+    "notAnnouncedJumpHint": "クリックでホームのオーダー入力画面へ",
     "sequentialIntro": "ホームは試合ごとに 1 ポジションずつ発表します。先鋒を発表 → 先鋒戦終了後に中堅を発表 …の順。",
     "announceCta": "{position} を発表",
     "announcedLabel": "● 発表済",

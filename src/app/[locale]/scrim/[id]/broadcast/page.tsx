@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
-import { ScrimWorkspace } from "./scrim-workspace";
+import { BroadcastView } from "./broadcast-view";
 
 export async function generateMetadata({
   params,
@@ -10,19 +10,18 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Meta" });
   return {
-    title: t("scrim.title"),
-    description: t("scrim.description"),
+    title: t("broadcast.title"),
+    description: t("broadcast.description"),
     robots: { index: false, follow: false },
   };
 }
 
-export default async function ScrimDetailPage({
+export default async function BroadcastPage({
   params,
 }: {
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
-
-  return <ScrimWorkspace id={id} />;
+  return <BroadcastView id={id} />;
 }

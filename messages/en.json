@@ -1,7 +1,23 @@
 {
   "Meta": {
     "appName": "SFScrim",
-    "tagline": "Scrim operations tool for SF6 team battles"
+    "tagline": "Scrim operations tool for SF6 team battles",
+    "titleTemplate": "%s — SFScrim",
+    "description": "SFScrim is a scrim operations tool for SF6 team battles. Lineup input, home & away flow, and victory point tracking — all in the browser, fully aligned with the official SFL ruleset.",
+    "ogImageAlt": "SFScrim — Scrim operations tool for SF6 team battles",
+    "siteName": "SFScrim",
+    "scrim": {
+      "title": "Scrim dashboard",
+      "description": "Manage lineups, match progression, and victory points for your scrim."
+    },
+    "orderInput": {
+      "title": "Lineup input",
+      "description": "Enter the 1st / 2nd / 3rd lineup plus the tiebreak player."
+    },
+    "broadcast": {
+      "title": "Broadcast view",
+      "description": "Stream-optimized scoreboard & lineup. Home's un-announced positions are auto-masked."
+    }
   },
   "Landing": {
     "navScrim": "Scrim",
@@ -72,23 +88,25 @@
     },
     "createdAtLabel": "Created at",
     "backToHome": "Back to home",
-    "resetScrim": "Discard this scrim"
+    "resetScrim": "Discard this scrim",
+    "openBroadcast": "Broadcast view"
   },
   "Order": {
     "sectionTagOrder": "— Step 01 · Order",
     "sectionTitleOrder": "Lineup input",
-    "flowExplanation": "Official-ruleset flow: Away (lower seed) submits players & characters first → Home (higher seed) responds. Home cannot input until Away is locked.",
+    "flowExplanation": "Away submits players & characters first → Home responds. Home cannot input until Away is locked.",
     "waitingForAway": "Waiting for Away",
     "sectionTagPreview": "— Step 02 · Preview",
     "sectionTitlePreview": "Preview",
     "viewPreview": "Preview",
+    "previewSaveHint": "Save the lineup first, then preview.",
     "roleEntryTitle": {
       "away": "Away: Order",
       "home": "Home: Order"
     },
     "roleEntryDesc": {
-      "away": "Lower seed. Submits players & characters first.",
-      "home": "Higher seed. Responds after seeing Away's lineup."
+      "away": "Submits players & characters first.",
+      "home": "Responds after seeing Away's lineup."
     },
     "roleEntryCta": {
       "away": "Open input",
@@ -124,6 +142,12 @@
     "savedLabel": "● Saved",
     "unsetTeamName": "(team name not set)",
     "emptySlot": "(empty)",
+    "notAnnounced": "(not announced)",
+    "notAnnouncedJumpHint": "Click to open Home's lineup input",
+    "sequentialIntro": "Home announces one position at a time. Announce 1st → after 1st battle, announce 2nd → and so on.",
+    "announceCta": "Announce {position}",
+    "announcedLabel": "● Announced",
+    "waitingForPrevious": "Editable after the previous position is announced",
     "startScrim": "Lock lineup → Start match",
     "startScrimHint": "Fill in vanguard / midfield / champion for both teams to enable.",
     "inProgressNotice": "Lineup locked. Use the score input below to record match progress.",
@@ -166,17 +190,44 @@
     "finalize": "Finalize match → finished",
     "tieDetectedHint": "Tied → enter tiebreak (+{tiebreak}pt).",
     "tiebreakSubMissing": "Register a tiebreak player on both teams",
+    "homeNotCommitted": "Announce Home's {position} first",
     "historyHeaders": {
       "position": "Position",
       "format": "Format",
       "winner": "Winner",
       "points": "Points"
     },
-    "noWinner": "(pending)"
+    "noWinner": "(pending)",
+    "live": {
+      "barId": "Scrim #{id}",
+      "section": "Sec.1",
+      "liveOn": "● LIVE",
+      "liveOff": "○ READY",
+      "liveDone": "● DECIDED",
+      "scoreboardTitle": "Scoreboard",
+      "scoreboardSubtitle": "SFL · Regular · Sec.1",
+      "lineupTitle": "Lineup",
+      "lineupSubtitle": "Sec.1",
+      "metaWonBy": "{side} +{pts}",
+      "metaPending": "Pending",
+      "metaTied": "+{pts}",
+      "rowResultWon": "Win +{pts}",
+      "rowResultLost": "Lose +0",
+      "rowResultNext": "+{pts} →",
+      "rowResultPending": "—",
+      "tiebreakLabel": "Tied → Tiebreak",
+      "tiebreakNeeded": "Awaiting tiebreak"
+    }
   },
   "Common": {
     "loading": "Loading…",
     "error": "Something went wrong",
     "retry": "Retry"
+  },
+  "Broadcast": {
+    "badge": "Broadcast view",
+    "backToDashboard": "Back to dashboard",
+    "hint": "Home's un-announced positions are auto-masked. Safe to capture in OBS without leaking lineup info.",
+    "notFound": "Scrim not found."
   }
 }

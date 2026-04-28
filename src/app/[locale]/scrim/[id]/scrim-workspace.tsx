@@ -34,17 +34,17 @@ export function ScrimWorkspace({ id }: { id: string }) {
   const awaySaved = isMainBattleCommitted(scrim.teams.away.players);
 
   return (
-    <main className="mx-auto max-w-[1320px] flex-1 px-8 py-12">
+    <main className="mx-auto w-full max-w-[1320px] flex-1 px-8 py-12">
       <div className="flex items-start justify-between gap-4">
-        <div>
+        <div className="min-w-0">
           <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
             {t("scrimLabel")}
           </div>
-          <h1 className="mt-2 font-display text-5xl font-extrabold tracking-[-0.02em]">
+          <h1 className="mt-2 font-display text-3xl font-extrabold tracking-[-0.02em] md:text-5xl">
             #<span className="text-accent">{scrim.id}</span>
           </h1>
         </div>
-        <LocaleSwitcher className="mt-2" />
+        <LocaleSwitcher className="mt-2 shrink-0" />
       </div>
 
       <div className="mt-10 grid gap-8 md:grid-cols-2">
@@ -75,11 +75,13 @@ export function ScrimWorkspace({ id }: { id: string }) {
           <div className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
             {t("metaLabel")}
           </div>
-          <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 font-mono text-sm">
+          <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 font-mono text-sm">
             <dt className="text-muted">{t("statusLabel")}</dt>
-            <dd>{t(`statuses.${scrim.status}`)}</dd>
+            <dd className="min-w-0 break-words">{t(`statuses.${scrim.status}`)}</dd>
             <dt className="text-muted">{t("createdAtLabel")}</dt>
-            <dd>{new Date(scrim.createdAt).toLocaleString()}</dd>
+            <dd className="min-w-0 break-words">
+              {new Date(scrim.createdAt).toLocaleString()}
+            </dd>
           </dl>
         </section>
       </div>
@@ -134,6 +136,12 @@ export function ScrimWorkspace({ id }: { id: string }) {
           >
             {t("backToHome")}
           </Link>
+          <Link
+            href={`/scrim/${id}/broadcast`}
+            className="inline-flex h-12 items-center border-2 border-ink bg-transparent px-6 font-display text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-bg"
+          >
+            {t("openBroadcast")} →
+          </Link>
           <button
             type="button"
             onClick={() => reset(id)}
@@ -154,7 +162,7 @@ export function ScrimWorkspace({ id }: { id: string }) {
 
 function ScrimSkeleton() {
   return (
-    <main className="mx-auto max-w-[1320px] flex-1 px-8 py-12">
+    <main className="mx-auto w-full max-w-[1320px] flex-1 px-8 py-12">
       <div className="h-3 w-32 bg-line" />
       <div className="mt-3 h-12 w-64 bg-line" />
       <div className="mt-10 h-32 bg-bg-2" />

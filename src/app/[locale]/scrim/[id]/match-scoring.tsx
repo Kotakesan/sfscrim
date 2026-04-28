@@ -1,36 +1,24 @@
 "use client";
 
 import { useTranslations, useLocale } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   REGULAR_BATTLE_ORDER,
   findRound1Match,
   nextRegularBattle,
   pointsFor,
   regularSeasonOutcome,
-  tallyScore,
 } from "@/lib/scoring";
 import { SFL_RULES, type BattlePosition } from "@/config/sfl-rules";
-import { getCharacterName } from "@/config/characters";
 import {
   useScrimStore,
   type MatchRecord,
-  type Player,
   type ScrimState,
   type Side,
 } from "@/store/scrim";
-
-function formatPlayerLabel(
-  p: Player | undefined,
-  locale: string,
-  fallback: string,
-): string {
-  if (!p) return fallback;
-  const char =
-    p.characterId !== undefined
-      ? ` · ${getCharacterName(p.characterId, locale)}`
-      : "";
-  return `${p.name}${char}`;
-}
+import { formatPlayerLabel } from "@/lib/player-format";
+import { findPlayer, isPositionCommittedAt } from "@/lib/order-state";
+import { LiveDashboard } from "./live-dashboard";
 
 export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
   const t = useTranslations("Score");
@@ -38,7 +26,6 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
   const undoLast = useScrimStore((s) => s.undoLastMatch);
   const setStatus = useScrimStore((s) => s.setStatus);
 
-  const score = tallyScore(scrim.matches);
   const next = nextRegularBattle(scrim.matches);
   const outcome = regularSeasonOutcome(scrim);
   const lastMatch = scrim.matches[scrim.matches.length - 1];
@@ -85,13 +72,7 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
         })}
       </p>
 
-      <Scoreboard
-        homeName={scrim.teams.home.name}
-        awayName={scrim.teams.away.name}
-        score={score}
-        outcome={outcome}
-        scrim={scrim}
-      />
+      <LiveDashboard scrim={scrim} />
 
       <div className="mt-6 grid gap-3">
         {REGULAR_BATTLE_ORDER.map((pos) => (
@@ -157,120 +138,6 @@ function lastMatchTokens(
   };
 }
 
-function Scoreboard({
-  homeName,
-  awayName,
-  score,
-  outcome,
-  scrim,
-}: {
-  homeName: string;
-  awayName: string;
-  score: { home: number; away: number };
-  outcome: ReturnType<typeof regularSeasonOutcome>;
-  scrim: ScrimState;
-}) {
-  const t = useTranslations("Score");
-  const max = SFL_RULES.format.regular.maxPoints;
-  const leadingSide: Side | undefined =
-    outcome.kind === "decided"
-      ? outcome.winner
-      : score.home === score.away
-        ? undefined
-        : score.home > score.away
-          ? "home"
-          : "away";
-
-  return (
-    <div className="border-2 border-ink bg-bg">
-      <div className="flex items-center justify-between border-b border-line bg-bg-3 px-4 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-2">
-        <span>{t("scoreboardTitle")}</span>
-        <span>
-          {t("statusLabel")}:{" "}
-          <b className="text-accent">
-            {t(`outcomeStatus.${outcome.kind}`)}
-            {outcome.kind === "decided" &&
-              ` · ${t("winnerSuffix", { name: outcome.winner === "home" ? homeName : awayName })}`}
-          </b>
-        </span>
-      </div>
-      <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-6 p-7 text-center">
-        <ScoreCell name={homeName} value={score.home} max={max} highlighted={leadingSide === "home"} />
-        <span className="font-mono text-xl text-muted">vs</span>
-        <ScoreCell name={awayName} value={score.away} max={max} highlighted={leadingSide === "away"} />
-      </div>
-      <MatchHistory scrim={scrim} />
-    </div>
-  );
-}
-
-function ScoreCell({
-  name,
-  value,
-  max,
-  highlighted,
-}: {
-  name: string;
-  value: number;
-  max: number;
-  highlighted: boolean;
-}) {
-  const t = useTranslations("Score");
-  return (
-    <div>
-      <div className="font-display text-xl font-bold tracking-[-0.01em]">
-        {name || t("teamUnnamed")}
-      </div>
-      <div
-        className={`mt-2 font-display text-7xl font-extrabold leading-none tracking-[-0.03em] ${
-          highlighted ? "text-accent" : "text-ink"
-        }`}
-      >
-        {value}
-      </div>
-      <div className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-muted">
-        / {max}
-      </div>
-    </div>
-  );
-}
-
-function MatchHistory({ scrim }: { scrim: ScrimState }) {
-  const t = useTranslations("Score");
-  if (scrim.matches.length === 0) return null;
-
-  return (
-    <div className="border-t border-line">
-      <div className="grid grid-cols-4 gap-2 border-b border-line bg-bg-2 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
-        <span>{t("historyHeaders.position")}</span>
-        <span>{t("historyHeaders.format")}</span>
-        <span>{t("historyHeaders.winner")}</span>
-        <span className="text-right">{t("historyHeaders.points")}</span>
-      </div>
-      {scrim.matches.map((m, i) => {
-        const pos = m.position as BattlePosition | "tiebreak";
-        return (
-          <div
-            key={`${m.roundNo}-${m.position}-${i}`}
-            className="grid grid-cols-4 gap-2 px-4 py-2 font-mono text-xs"
-          >
-            <span className="text-ink-2">{t(`positions.${pos}`)}</span>
-            <span className="text-muted">{SFL_RULES.position[pos].format}</span>
-            <span className="text-ink-2">
-              {m.winnerSide
-                ? t(`sides.${m.winnerSide}`)
-                : t("noWinner")}
-            </span>
-            <span className="text-right font-bold text-accent">
-              +{m.points}
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 function BattleRow({
   scrim,
   position,
@@ -283,42 +150,59 @@ function BattleRow({
   onWin: (position: BattlePosition, side: Side) => void;
 }) {
   const t = useTranslations("Score");
+  const tOrder = useTranslations("Order");
   const locale = useLocale();
+  const commitPosition = useScrimStore((s) => s.commitPosition);
   const recorded = findRound1Match(scrim.matches, position);
   const points = pointsFor(position);
   const format = SFL_RULES.position[position].format;
-  const homePlayer = scrim.teams.home.players.find(
-    (p) => p.position === position,
-  );
-  const awayPlayer = scrim.teams.away.players.find(
-    (p) => p.position === position,
-  );
+  const homePlayer = findPlayer(scrim.teams.home.players, position);
+  const awayPlayer = findPlayer(scrim.teams.away.players, position);
+  const homeAnnounced = isPositionCommittedAt(scrim.teams.home.players, position);
+  const awaitingHome = isNext && !recorded && !homeAnnounced;
   const empty = t("emptyPlayer");
-  const disabled = !isNext || Boolean(recorded);
+  const disabled = !isNext || Boolean(recorded) || awaitingHome;
 
   return (
-    <div className="border border-line bg-bg-2 p-4">
-      <header className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <div>
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-            {t(`positions.${position}`)} · {format} · +{points}pt
+    <div
+      className={`border bg-bg-2 p-4 ${
+        awaitingHome ? "border-accent" : "border-line"
+      }`}
+    >
+      <header className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
+        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+          {t(`positions.${position}`)} · {format} · +{points}pt
+        </span>
+        {recorded?.winnerSide && (
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+            ● {t(`sides.${recorded.winnerSide}`)} {t("wonSuffix")}
           </span>
-          {recorded?.winnerSide && (
-            <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
-              ● {t(`sides.${recorded.winnerSide}`)} {t("wonSuffix")}
-            </span>
-          )}
-          {!recorded && isNext && (
-            <span className="ml-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
-              ● {t("nextLabel")}
-            </span>
-          )}
-        </div>
+        )}
+        {!recorded && isNext && !awaitingHome && (
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-accent">
+            ● {t("nextLabel")}
+          </span>
+        )}
+        {awaitingHome && (
+          <Link
+            href={`/scrim/${scrim.id}/order/home`}
+            className="inline-flex items-center border border-accent bg-accent-soft px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-accent transition-colors hover:bg-accent hover:text-bg"
+          >
+            {t("homeNotCommitted", {
+              position: t(`positions.${position}`),
+            })}{" "}
+            →
+          </Link>
+        )}
       </header>
 
       <div className="grid grid-cols-1 gap-3 md:grid-cols-[1fr_120px_1fr]">
         <BattlePlayer
-          name={formatPlayerLabel(homePlayer, locale, empty)}
+          name={
+            homeAnnounced
+              ? formatPlayerLabel(homePlayer, locale, empty)
+              : tOrder("notAnnounced")
+          }
           side="home"
           isWinner={recorded?.winnerSide === "home"}
         />
@@ -349,6 +233,20 @@ function BattleRow({
           isWinner={recorded?.winnerSide === "away"}
         />
       </div>
+
+      {awaitingHome && homePlayer && homePlayer.name.trim().length > 0 && (
+        <div className="mt-3 border-t border-line pt-3">
+          <button
+            type="button"
+            onClick={() => commitPosition(scrim.id, "home", position)}
+            className="inline-flex h-9 items-center border-2 border-accent bg-accent px-4 font-display text-xs font-semibold text-bg transition-colors hover:border-ink hover:bg-ink"
+          >
+            {tOrder("announceCta", {
+              position: tOrder(`positions.${position}`),
+            })}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
@@ -460,4 +358,3 @@ function TiebreakRow({
     </div>
   );
 }
-

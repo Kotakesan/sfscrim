@@ -18,6 +18,10 @@
       "title": "Broadcast view",
       "description": "Stream-optimized scoreboard & lineup. Home's un-announced positions are auto-masked."
     },
+    "history": {
+      "title": "Scrim history",
+      "description": "Browse, open, and delete scrims saved in your browser."
+    },
     "privacy": {
       "title": "Privacy Policy",
       "description": "How SFScrim handles personal and usage information."
@@ -44,7 +48,7 @@
     "heroTitleAccent": "smarter.",
     "heroLead": "SFScrim is a scrim operations tool for SF6 team battles. Lineup input, home & away flow, victory point tracking — all in the browser. Stats and match-history aggregation are next on the roadmap.",
     "ctaCreate": "Create a scrim →",
-    "ctaSaveHistory": "Save history",
+    "ctaSaveHistory": "View history",
     "stats": {
       "vanguard": "1st",
       "midfield": "2nd",
@@ -247,7 +251,31 @@
     "navPrivacy": "Privacy",
     "navTerms": "Terms",
     "navContact": "Contact",
-    "navHome": "Home"
+    "navHome": "Home",
+    "navHistory": "History"
+  },
+  "History": {
+    "intro": "Scrims saved in this browser. Click any scrim to view details.",
+    "storageNote": "Sign-in is not yet available — data is stored only on this device and browser. Clearing your browser data will erase the history too.",
+    "empty": {
+      "title": "No scrims yet",
+      "body": "Create a new scrim and it will show up here.",
+      "cta": "Create a scrim →"
+    },
+    "card": {
+      "scrimIdLabel": "Scrim",
+      "createdLabel": "Created",
+      "formatLabel": "Format",
+      "statusLabel": "Status",
+      "matchesLabel": "Matches",
+      "matchesUnit": "{n}",
+      "vs": "vs",
+      "teamUnnamed": "(unnamed)",
+      "deleteLabel": "Delete",
+      "openLabel": "Open →"
+    },
+    "deleteConfirm": "Delete this scrim from your browser. Are you sure?",
+    "deleteAnnouncement": "Scrim {id} deleted."
   },
   "Legal": {
     "backToHome": "← Back to home",

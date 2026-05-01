@@ -16,6 +16,9 @@ export async function SiteFooter() {
           <Link href="/" className="text-muted hover:text-ink hover:underline focus-visible:text-ink focus-visible:underline focus-visible:outline-none">
             {tFooter("navHome")}
           </Link>
+          <Link href="/history" className="text-muted hover:text-ink hover:underline focus-visible:text-ink focus-visible:underline focus-visible:outline-none">
+            {tFooter("navHistory")}
+          </Link>
           <Link href="/privacy" className="text-muted hover:text-ink hover:underline focus-visible:text-ink focus-visible:underline focus-visible:outline-none">
             {tFooter("navPrivacy")}
           </Link>

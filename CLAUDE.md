@@ -34,12 +34,12 @@ feature/* / chore/* / fix/*  ← develop から切る
 ### `/ship-loop` の流れ
 
 ```
-/simplify → commit & push → PR 作成 → /review ループ
+/simplify → commit & push → PR 作成 → review (Agent 並列) ループ
                                        ├ APPROVED → merge → 次の issue へ
-                                       └ 指摘あり → 修正 → /review
+                                       └ 指摘あり → 修正 → 再 review
 ```
 
-詳細は `.claude/commands/ship-loop.md` を参照。
+review は **Agent tool で correctness / security / a11y のレビュアーを並列起動** する (Skill `/review` は使わない)。詳細は `.claude/commands/ship-loop.md` 参照。
 
 ### 強制力（hook）
 
@@ -61,11 +61,11 @@ feature/* / chore/* / fix/*  ← develop から切る
 過去のセッションで **Skill ツール（/simplify や /review）から戻った直後にテキスト応答を返してターン終了** という失敗が複数回発生している。Skill 戻りは Claude にとって「ターンの自然な終端」に見えるが、ship-loop は自動継続を期待しているのでこれが致命的。
 
 **対策**:
-1. **Skill `/review` を使わない**。Bash で `gh pr view <PR>` + `gh pr diff <PR>` を取得して、**メインターン内で self-review** する
+1. **Skill `/review` を使わない**。代わりに **Agent tool で独立レビュアー (correctness / security / a11y) を並列起動** する。Agent 戻りは tool result としてメインターンに帰るため Skill のような「ターン終端」問題が起きない。各 Agent は自分で `gh pr view <PR>` + `gh pr diff <PR>` を取得してレビュー
 2. **マーカー発行は Write tool**（Bash の `>` redirect は権限プロンプトで止まりやすい）。`.claude/settings.local.json` の `permissions.allow` に `Write(.claude/.simplify-done)` / `Write(.claude/.review-approved)` を入れて always allow にしておく
 3. **判定後（APPROVED でも指摘ありでも）テキスト応答を返さず即座に次の tool 呼び出しを実行**
    - APPROVED → 即 Write tool で `.review-approved` → `gh pr merge` → develop 同期 → 次 issue checkout
-   - 指摘あり → 即 Edit/Write で修正 → `git commit & push` → 再 self-review
+   - 指摘あり → 即 Edit/Write で修正 → `git commit & push` → 再 review (Agent 並列)
 
 詳細は `.claude/commands/ship-loop.md` を参照。
 

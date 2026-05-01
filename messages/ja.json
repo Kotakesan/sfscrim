@@ -18,6 +18,10 @@
       "title": "配信ビュー",
       "description": "配信用に最適化したスコア・ラインナップ表示。ホーム未発表ポジは自動で伏せます。"
     },
+    "history": {
+      "title": "スクリム履歴",
+      "description": "ブラウザに保存された過去のスクリムを一覧・閲覧・削除します。"
+    },
     "privacy": {
       "title": "プライバシーポリシー",
       "description": "SFScrim における個人情報・利用情報の取り扱い方針。"
@@ -44,7 +48,7 @@
     "heroTitleAccent": "スマートに。",
     "heroLead": "SFScrim は SF6 のスクリム運営ツール。オーダー入力、ホーム＆アウェイ、勝利ポイントの管理を Web で完結。今後はキャラクター別勝率や対戦履歴など、スクリムから集まるデータの集計にも対応予定。",
     "ctaCreate": "スクリムを作成 →",
-    "ctaSaveHistory": "履歴を保存",
+    "ctaSaveHistory": "履歴を見る",
     "stats": {
       "vanguard": "先鋒 / VG",
       "midfield": "中堅 / Mid",
@@ -247,7 +251,30 @@
     "navPrivacy": "Privacy",
     "navTerms": "Terms",
     "navContact": "Contact",
-    "navHome": "Home"
+    "navHome": "Home",
+    "navHistory": "History"
+  },
+  "History": {
+    "intro": "このブラウザに保存された過去のスクリムです。各スクリムをクリックすると詳細を確認できます。",
+    "storageNote": "ログイン機能リリース前のため、データはこの端末・ブラウザ内にのみ保存されています。ブラウザのデータを消去すると履歴も失われます。",
+    "empty": {
+      "title": "まだスクリムがありません",
+      "body": "新しいスクリムを作成すると、ここに履歴として表示されます。",
+      "cta": "スクリムを作成 →"
+    },
+    "card": {
+      "scrimIdLabel": "Scrim",
+      "createdLabel": "作成",
+      "formatLabel": "形式",
+      "statusLabel": "状態",
+      "matchesLabel": "試合",
+      "matchesUnit": "{n} 戦",
+      "vs": "vs",
+      "teamUnnamed": "未命名",
+      "deleteLabel": "削除",
+      "openLabel": "開く →"
+    },
+    "deleteConfirm": "このスクリムをブラウザから削除します。よろしいですか？"
   },
   "Legal": {
     "backToHome": "← ホームへ戻る",

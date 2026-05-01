@@ -110,12 +110,12 @@ export default async function Home({
               >
                 {t("ctaCreate")}
               </Link>
-              <a
-                href="#"
-                className="inline-flex h-[50px] items-center gap-2.5 border-2 border-ink bg-transparent px-6 font-display text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-bg"
+              <Link
+                href="/history"
+                className="inline-flex h-[50px] items-center gap-2.5 border-2 border-ink bg-transparent px-6 font-display text-sm font-semibold text-ink transition-colors hover:bg-ink hover:text-bg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
               >
                 {t("ctaSaveHistory")}
-              </a>
+              </Link>
             </div>
           </div>
 

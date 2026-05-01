@@ -8,13 +8,15 @@ export const routing = defineRouting({
 
 export type Locale = (typeof routing.locales)[number];
 
-export function localeHref(locale: string, base = ""): string {
-  return locale === routing.defaultLocale ? `${base}/` : `${base}/${locale}`;
+export function localeHref(locale: string, path = "/"): string {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  if (locale === routing.defaultLocale) return normalized;
+  return normalized === "/" ? `/${locale}` : `/${locale}${normalized}`;
 }
 
-export function buildLanguageAlternates(base = ""): Record<string, string> {
+export function buildLanguageAlternates(path = "/"): Record<string, string> {
   return Object.fromEntries(
-    routing.locales.map((l) => [l, localeHref(l, base)]),
+    routing.locales.map((l) => [l, localeHref(l, path)]),
   );
 }
 

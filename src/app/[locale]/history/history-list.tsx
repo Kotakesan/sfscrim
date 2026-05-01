@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { useTranslations, useFormatter, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useScrimStore, type ScrimState } from "@/store/scrim";
@@ -11,6 +12,7 @@ export function HistoryList() {
   const reset = useScrimStore((s) => s.reset);
   const t = useTranslations("History");
   const tCommon = useTranslations("Common");
+  const [announcement, setAnnouncement] = useState("");
 
   if (!hydrated) {
     return (
@@ -46,17 +48,23 @@ export function HistoryList() {
   const handleDelete = (id: string) => {
     if (window.confirm(t("deleteConfirm"))) {
       reset(id);
+      setAnnouncement(t("deleteAnnouncement", { id: id.slice(0, 6) }));
     }
   };
 
   return (
-    <ul className="grid gap-4 sm:grid-cols-2">
-      {list.map((scrim) => (
-        <li key={scrim.id}>
-          <ScrimCard scrim={scrim} onDelete={handleDelete} />
-        </li>
-      ))}
-    </ul>
+    <>
+      <ul className="grid gap-4 sm:grid-cols-2">
+        {list.map((scrim) => (
+          <li key={scrim.id}>
+            <ScrimCard scrim={scrim} onDelete={handleDelete} />
+          </li>
+        ))}
+      </ul>
+      <div role="status" aria-live="polite" className="sr-only">
+        {announcement}
+      </div>
+    </>
   );
 }
 
@@ -102,7 +110,7 @@ function ScrimCard({
         </button>
       </header>
 
-      <p
+      <h2
         lang={locale}
         className="mt-4 font-display text-xl font-bold leading-[1.3] tracking-[-0.01em]"
       >
@@ -111,23 +119,23 @@ function ScrimCard({
           {t("vs")}
         </span>
         {awayName}
-      </p>
+      </h2>
 
-      <dl className="mt-4 grid grid-cols-3 gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-muted">
+      <dl className="mt-4 grid grid-cols-3 gap-2 font-mono text-[10px] uppercase tracking-[0.16em]">
         <div>
-          <dt>{t("formatLabel")}</dt>
+          <dt className="text-ink-2">{t("formatLabel")}</dt>
           <dd className="mt-0.5 text-ink">
             {tScrim(`formats.${scrim.format}`)}
           </dd>
         </div>
         <div>
-          <dt>{t("matchesLabel")}</dt>
+          <dt className="text-ink-2">{t("matchesLabel")}</dt>
           <dd className="mt-0.5 text-ink">
             {t("matchesUnit", { n: scrim.matches.length })}
           </dd>
         </div>
         <div>
-          <dt>{t("createdLabel")}</dt>
+          <dt className="text-ink-2">{t("createdLabel")}</dt>
           <dd className="mt-0.5 text-ink">{formattedDate}</dd>
         </div>
       </dl>

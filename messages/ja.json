@@ -274,7 +274,8 @@
       "deleteLabel": "削除",
       "openLabel": "開く →"
     },
-    "deleteConfirm": "このスクリムをブラウザから削除します。よろしいですか？"
+    "deleteConfirm": "このスクリムをブラウザから削除します。よろしいですか？",
+    "deleteAnnouncement": "スクリム {id} を削除しました。"
   },
   "Legal": {
     "backToHome": "← ホームへ戻る",

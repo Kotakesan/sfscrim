@@ -274,7 +274,8 @@
       "deleteLabel": "Delete",
       "openLabel": "Open →"
     },
-    "deleteConfirm": "Delete this scrim from your browser. Are you sure?"
+    "deleteConfirm": "Delete this scrim from your browser. Are you sure?",
+    "deleteAnnouncement": "Scrim {id} deleted."
   },
   "Legal": {
     "backToHome": "← Back to home",

@@ -2,6 +2,7 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { SFL_RULES } from "@/config/sfl-rules";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { SiteFooter } from "@/components/site-footer";
 
 const FEATURE_KEYS = ["order", "rules", "fourVsFour", "i18n"] as const;
 
@@ -178,13 +179,7 @@ export default async function Home({
         </div>
       </section>
 
-      <footer className="mt-auto border-t border-line py-5">
-        <div className="mx-auto flex max-w-[1320px] flex-wrap justify-between gap-4 px-8 font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
-          <span>{t("footerCopyright")}</span>
-          <span>{t("footerTagline")}</span>
-          <span>{t("footerDisclaimer")}</span>
-        </div>
-      </footer>
+      <SiteFooter />
     </>
   );
 }

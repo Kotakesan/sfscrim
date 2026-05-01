@@ -17,6 +17,18 @@
     "broadcast": {
       "title": "Broadcast view",
       "description": "Stream-optimized scoreboard & lineup. Home's un-announced positions are auto-masked."
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "description": "How SFScrim handles personal and usage information."
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "description": "Conditions for using SFScrim."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Send feedback, bug reports, and feature requests for SFScrim."
     }
   },
   "Landing": {
@@ -229,5 +241,88 @@
     "backToDashboard": "Back to dashboard",
     "hint": "Home's un-announced positions are auto-masked. Safe to capture in OBS without leaking lineup info.",
     "notFound": "Scrim not found."
+  },
+  "SiteFooter": {
+    "navHeading": "About",
+    "navPrivacy": "Privacy",
+    "navTerms": "Terms",
+    "navContact": "Contact",
+    "navHome": "Home"
+  },
+  "Legal": {
+    "backToHome": "← Back to home",
+    "lastUpdated": "Last updated: {date}",
+    "privacy": {
+      "intro": "SFScrim (the \"Service\") is a web app that supports team-battle operations for Street Fighter 6. This policy describes how the Service handles personal and usage information.",
+      "sections": [
+        {
+          "heading": "1. Information we collect",
+          "body": "- Inputs: scrim lineups, scores, and similar data are stored in your browser (localStorage) and not sent to our servers by default.\n- Access logs: source IP address, User-Agent, and similar metadata are recorded as Cloudflare Workers access logs.\n- Authentication info (after sign-in is released): when using Discord / Google OAuth, we obtain your display name, avatar URL, and email address."
+        },
+        {
+          "heading": "2. How we use the information",
+          "body": "- To provide and improve the Service\n- To detect abuse and to maintain security\n- To respond to your inquiries"
+        },
+        {
+          "heading": "3. Sharing with third parties",
+          "body": "Except as required by law, we do not share collected information with third parties."
+        },
+        {
+          "heading": "4. Third-party services",
+          "body": "The Service may use the following third-party services:\n- Cloudflare (infrastructure)\n- Discord / Google (OAuth authentication)\n- Google AdSense (advertising, after approval)"
+        },
+        {
+          "heading": "5. Cookies",
+          "body": "We may use cookies to maintain your authenticated session. Cookies used for advertising are handled in accordance with Google's policies."
+        },
+        {
+          "heading": "6. Contact",
+          "body": "For questions about this policy, please reach out via the Contact page."
+        },
+        {
+          "heading": "7. Changes",
+          "body": "This policy may be updated without prior notice. Updates take effect when published on this page."
+        }
+      ]
+    },
+    "terms": {
+      "intro": "These Terms of Service (the \"Terms\") govern use of SFScrim (the \"Service\"). By using the Service, you agree to these Terms.",
+      "sections": [
+        {
+          "heading": "1. Scope",
+          "body": "These Terms apply to everyone who uses the Service."
+        },
+        {
+          "heading": "2. Use of the Service",
+          "body": "- The Service is an individually operated tool for scrim operations and is provided on an as-is basis. Use at your own risk.\n- Input data is stored in your browser (localStorage) by default. We are not responsible for data loss."
+        },
+        {
+          "heading": "3. Prohibited conduct",
+          "body": "You must not:\n- Violate any law or public order and morals\n- Interfere with the operation of the Service or attempt to reverse-engineer it\n- Impersonate any third party"
+        },
+        {
+          "heading": "4. Intellectual property",
+          "body": "The Service's source code is published on GitHub. Information about the Street Fighter League (SFL) shown in the Service is sourced from official CAPCOM materials."
+        },
+        {
+          "heading": "5. Disclaimer",
+          "body": "The Service is provided \"as is\" without any express or implied warranty. We are not liable for any damage arising from use of the Service."
+        },
+        {
+          "heading": "6. Relationship with SFL / CAPCOM",
+          "body": "The Service is not affiliated with the Street Fighter League (SFL) or CAPCOM Co., Ltd. in any way."
+        },
+        {
+          "heading": "7. Changes to these Terms",
+          "body": "These Terms may be updated without prior notice."
+        }
+      ]
+    },
+    "contact": {
+      "intro": "For feedback, bug reports, and feature requests for SFScrim, please open a thread on GitHub Issues.",
+      "githubLabel": "Open GitHub Issues →",
+      "githubUrl": "https://github.com/Kotakesan/sfscrim/issues",
+      "responseHint": "This is an individually operated project — replies may take some time. Thanks for your patience."
+    }
   }
 }

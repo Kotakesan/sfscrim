@@ -17,6 +17,18 @@
     "broadcast": {
       "title": "配信ビュー",
       "description": "配信用に最適化したスコア・ラインナップ表示。ホーム未発表ポジは自動で伏せます。"
+    },
+    "privacy": {
+      "title": "プライバシーポリシー",
+      "description": "SFScrim における個人情報・利用情報の取り扱い方針。"
+    },
+    "terms": {
+      "title": "利用規約",
+      "description": "SFScrim を利用するうえでの利用条件。"
+    },
+    "contact": {
+      "title": "お問い合わせ",
+      "description": "SFScrim に関するご意見・バグ報告・機能要望の窓口。"
     }
   },
   "Landing": {
@@ -229,5 +241,88 @@
     "backToDashboard": "ダッシュボードへ戻る",
     "hint": "ホーム側の未発表ポジションは自動で「未発表」表示にマスクされます。OBS 等で画面取込みしてもオーダーは漏れません。",
     "notFound": "対象のスクリムが見つかりません。"
+  },
+  "SiteFooter": {
+    "navHeading": "About",
+    "navPrivacy": "Privacy",
+    "navTerms": "Terms",
+    "navContact": "Contact",
+    "navHome": "Home"
+  },
+  "Legal": {
+    "backToHome": "← ホームへ戻る",
+    "lastUpdated": "最終更新: {date}",
+    "privacy": {
+      "intro": "SFScrim（以下「本サービス」）は、ストリートファイター 6 のチーム戦運用を支援する Web アプリです。本ポリシーでは、本サービスにおける個人情報および利用情報の取り扱いについて定めます。",
+      "sections": [
+        {
+          "heading": "1. 取得する情報",
+          "body": "・入力情報: スクリムのオーダー・スコア等は原則ブラウザ内（localStorage）に保存され、サーバーには送信されません。\n・アクセスログ: 配信元 IP アドレス・User-Agent 等を Cloudflare Workers のアクセスログとして取得します。\n・認証情報（ログイン機能リリース後）: Discord / Google OAuth を利用する場合、表示名・アバター URL・メールアドレスを取得します。"
+        },
+        {
+          "heading": "2. 利用目的",
+          "body": "・本サービスの提供および動作改善\n・不正利用の検出およびセキュリティ対策\n・お問い合わせへの対応"
+        },
+        {
+          "heading": "3. 第三者提供",
+          "body": "法令に基づく場合を除き、取得した情報を第三者に提供することはありません。"
+        },
+        {
+          "heading": "4. 外部サービス",
+          "body": "本サービスは以下の外部サービスを利用する場合があります。\n・Cloudflare（インフラ）\n・Discord / Google（OAuth 認証）\n・Google AdSense（広告配信、申請通過後）"
+        },
+        {
+          "heading": "5. Cookie 等",
+          "body": "ログインセッションの維持のため Cookie を使用する場合があります。広告配信用の Cookie は Google のポリシーに従って取り扱われます。"
+        },
+        {
+          "heading": "6. お問い合わせ",
+          "body": "本ポリシーに関するお問い合わせは「お問い合わせ」ページよりお願いします。"
+        },
+        {
+          "heading": "7. 改定",
+          "body": "本ポリシーは予告なく改定される場合があります。改定後の内容は本ページに掲載した時点から効力を生じます。"
+        }
+      ]
+    },
+    "terms": {
+      "intro": "本利用規約（以下「本規約」）は、SFScrim（以下「本サービス」）の利用条件を定めるものです。利用者は本規約に同意したうえで本サービスを利用するものとします。",
+      "sections": [
+        {
+          "heading": "1. 適用範囲",
+          "body": "本規約は、本サービスを利用するすべての者に適用されます。"
+        },
+        {
+          "heading": "2. 利用上の注意",
+          "body": "・本サービスは個人運営のスクリム支援ツールであり、利用は自己責任とします。\n・入力データは原則ブラウザ内（localStorage）に保存されます。データ消失について運営は責任を負いません。"
+        },
+        {
+          "heading": "3. 禁止事項",
+          "body": "利用者は以下の行為を行ってはなりません。\n・法令違反、公序良俗に反する行為\n・本サービスの運営妨害、リバースエンジニアリング\n・第三者になりすます行為"
+        },
+        {
+          "heading": "4. 知的財産",
+          "body": "本サービスのソースコードは GitHub にて公開されています。本サービスに掲載されている SFL（Street Fighter League）関連情報は CAPCOM 公式の情報を参照しています。"
+        },
+        {
+          "heading": "5. 免責",
+          "body": "本サービスは「現状有姿」で提供され、運営は明示・黙示を問わず一切の保証を行いません。本サービスの利用に起因する損害について、運営は責任を負いません。"
+        },
+        {
+          "heading": "6. SFL / CAPCOM との関係",
+          "body": "本サービスは SFL（Street Fighter League）および株式会社カプコンとは一切関係ありません。"
+        },
+        {
+          "heading": "7. 規約の改定",
+          "body": "本規約は予告なく改定される場合があります。"
+        }
+      ]
+    },
+    "contact": {
+      "intro": "SFScrim に関するご意見・バグ報告・機能要望は、GitHub Issues よりお寄せください。",
+      "githubLabel": "GitHub Issues を開く →",
+      "githubUrl": "https://github.com/Kotakesan/sfscrim/issues",
+      "responseHint": "個人運営のため、返信に時間がかかる場合があります。あらかじめご了承ください。"
+    }
   }
 }

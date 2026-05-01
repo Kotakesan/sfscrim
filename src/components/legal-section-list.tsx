@@ -2,15 +2,16 @@ export type LegalSection = { heading: string; body: string };
 
 interface LegalSectionListProps {
   intro: string;
-  sections: LegalSection[];
+  sections: LegalSection[] | undefined;
 }
 
 export function LegalSectionList({ intro, sections }: LegalSectionListProps) {
+  const safeSections = Array.isArray(sections) ? sections : [];
   return (
     <>
       <p className="m-0 text-base leading-[1.8] text-ink">{intro}</p>
       <div className="mt-10 flex flex-col gap-8">
-        {sections.map((sec) => (
+        {safeSections.map((sec) => (
           <section key={sec.heading}>
             <h2 className="m-0 font-display text-2xl font-bold tracking-[-0.01em]">
               {sec.heading}

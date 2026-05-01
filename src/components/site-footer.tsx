@@ -13,16 +13,16 @@ export async function SiteFooter() {
           className="flex flex-wrap items-center gap-x-5 gap-y-2 font-mono text-[11px] uppercase tracking-[0.18em]"
         >
           <span className="text-accent">— {tFooter("navHeading")}</span>
-          <Link href="/" className="text-muted hover:text-ink">
+          <Link href="/" className="text-muted hover:text-ink hover:underline focus-visible:text-ink focus-visible:underline focus-visible:outline-none">
             {tFooter("navHome")}
           </Link>
-          <Link href="/privacy" className="text-muted hover:text-ink">
+          <Link href="/privacy" className="text-muted hover:text-ink hover:underline focus-visible:text-ink focus-visible:underline focus-visible:outline-none">
             {tFooter("navPrivacy")}
           </Link>
-          <Link href="/terms" className="text-muted hover:text-ink">
+          <Link href="/terms" className="text-muted hover:text-ink hover:underline focus-visible:text-ink focus-visible:underline focus-visible:outline-none">
             {tFooter("navTerms")}
           </Link>
-          <Link href="/contact" className="text-muted hover:text-ink">
+          <Link href="/contact" className="text-muted hover:text-ink hover:underline focus-visible:text-ink focus-visible:underline focus-visible:outline-none">
             {tFooter("navContact")}
           </Link>
         </nav>

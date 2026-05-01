@@ -14,14 +14,17 @@ export async function SiteHeader() {
         <div className="flex h-[60px] items-center justify-between">
           <Link
             href="/"
-            className="font-display text-2xl font-extrabold tracking-tight"
+            aria-label={t("backToHome")}
+            className="font-display text-2xl font-extrabold tracking-tight focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
           >
-            SF<i className="not-italic text-accent">S</i>crim
+            <span aria-hidden="true">
+              SF<i className="not-italic text-accent">S</i>crim
+            </span>
           </Link>
           <div className="flex items-center gap-4">
             <Link
               href="/"
-              className="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-muted hover:text-ink sm:inline"
+              className="hidden font-mono text-[11px] uppercase tracking-[0.18em] text-muted hover:text-ink hover:underline focus-visible:text-ink focus-visible:underline focus-visible:outline-none sm:inline"
             >
               {t("backToHome")}
             </Link>

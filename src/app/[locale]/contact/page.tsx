@@ -46,7 +46,7 @@ export default async function ContactPage({
         href={tContact("githubUrl")}
         target="_blank"
         rel="noopener noreferrer"
-        className="mt-8 inline-flex h-[50px] items-center gap-2.5 border-2 border-accent bg-accent px-6 font-display text-sm font-semibold text-bg transition-colors hover:border-ink hover:bg-ink"
+        className="mt-8 inline-flex h-[50px] items-center gap-2.5 border-2 border-accent bg-accent px-6 font-display text-sm font-semibold text-bg transition-colors hover:border-ink hover:bg-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
       >
         {tContact("githubLabel")}
       </a>

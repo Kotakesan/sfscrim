@@ -17,7 +17,10 @@
     "db:execute:local": "wrangler d1 execute sfscrim-db --local"
   },
   "dependencies": {
+    "@better-auth/drizzle-adapter": "^1.6.9",
     "@opennextjs/cloudflare": "^1.19.4",
+    "better-auth": "^1.6.9",
+    "drizzle-orm": "^0.45.2",
     "nanoid": "^5.1.9",
     "next": "16.2.4",
     "next-intl": "^4.9.1",

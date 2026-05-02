@@ -33,6 +33,10 @@
     "contact": {
       "title": "お問い合わせ",
       "description": "SFScrim に関するご意見・バグ報告・機能要望の窓口。"
+    },
+    "login": {
+      "title": "ログイン",
+      "description": "SFScrim にログインして履歴を保存・閲覧できます。"
     }
   },
   "Landing": {
@@ -351,6 +355,24 @@
       "githubLabel": "GitHub Issues を開く →",
       "githubUrl": "https://github.com/Kotakesan/sfscrim/issues",
       "responseHint": "個人運営のため、返信に時間がかかる場合があります。あらかじめご了承ください。"
+    }
+  },
+  "Auth": {
+    "header": {
+      "signIn": "ログイン",
+      "signOut": "ログアウト",
+      "menuLabel": "{name} メニュー"
+    },
+    "login": {
+      "title": "ログイン",
+      "description": "SFScrim では、確定したスクリムをアカウントに紐付けて履歴に残せます。",
+      "mockHeading": "テストユーザーでログイン",
+      "mockBody": "開発環境では、固定のテストユーザーで即ログインできます。本番では Discord / Google ログインに切り替わります。",
+      "mockButton": "テストユーザーでログイン",
+      "errorGeneric": "ログインに失敗しました。再度お試しください。",
+      "loading": "読み込み中…",
+      "comingSoonHeading": "準備中",
+      "comingSoonBody": "Discord / Google でのログインを順次提供予定です。"
     }
   }
 }

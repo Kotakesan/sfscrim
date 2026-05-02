@@ -15,6 +15,13 @@ export async function isDevEnv(): Promise<boolean> {
   return cachedIsDev;
 }
 
+// Mock auth (emailAndPassword + 「テストユーザーでログイン」ボタン) は本番以外で有効。
+// dev/preview/未設定すべてで mock を出すため "production 以外" を判定軸にする。
+// 同期版が必要な箇所（API route handler など）から直接 env を渡して使う。
+export function isMockAuthEnabledFromEnv(env: { APP_ENV?: string }): boolean {
+  return env.APP_ENV !== "production";
+}
+
 async function detectIsDev(): Promise<boolean> {
   // Fail-open by design: the [locale] layout is SSG-prerendered, so this runs
   // at build time *with no Cloudflare context*. A single build artifact ships

@@ -207,7 +207,6 @@
     "undoLast": "Undo last entry ({detail})",
     "undoLastDetail": "{position} · {winner} won",
     "undoLastNone": "no history",
-    "finalize": "Finalize match → finished",
     "tieDetectedHint": "Tied → enter tiebreak (+{tiebreak}pt).",
     "tiebreakSubMissing": "Register a tiebreak player on both teams",
     "homeNotCommitted": "Announce Home's {position} first",
@@ -237,6 +236,18 @@
       "rowResultPending": "—",
       "tiebreakLabel": "Tied → Tiebreak",
       "tiebreakNeeded": "Awaiting tiebreak"
+    },
+    "saving": "Saving…",
+    "finalizeButton": "Finalize match → finished",
+    "finalizeNotice": {
+      "savedNotice": "Saved to the cloud. You can access it anytime from /history.",
+      "signInHeading": "Sign in to save this scrim",
+      "signInBody": "Sign in now to save this scrim to your account history. It will survive across devices.",
+      "signInCta": "Sign in",
+      "saveFailedHeading": "Save failed",
+      "saveFailedBody": "A network or server error occurred. Please try again.",
+      "retry": "Retry",
+      "saving": "Saving…"
     }
   },
   "Common": {
@@ -276,10 +287,17 @@
       "vs": "vs",
       "teamUnnamed": "(unnamed)",
       "deleteLabel": "Delete",
-      "openLabel": "Open →"
+      "openLabel": "Open →",
+      "sourceCloud": "CLOUD",
+      "sourceLocal": "LOCAL",
+      "snapshotOnly": "finalized snapshot",
+      "deletePending": "deleting…"
     },
     "deleteConfirm": "Delete this scrim from your browser. Are you sure?",
-    "deleteAnnouncement": "Scrim {id} deleted."
+    "deleteAnnouncement": "Scrim {id} deleted.",
+    "storageNoteSignedIn": "Showing both cloud-saved scrims (D1) and local drafts on this device.",
+    "hybridNote": "Cloud + Local — merged view",
+    "deleteFailed": "Delete failed. Please try again."
   },
   "Legal": {
     "backToHome": "← Back to home",

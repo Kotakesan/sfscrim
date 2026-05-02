@@ -207,7 +207,6 @@
     "undoLast": "最後の入力を取り消す（{detail}）",
     "undoLastDetail": "{position} · {winner} 勝",
     "undoLastNone": "履歴なし",
-    "finalize": "試合を確定する → 終了",
     "tieDetectedHint": "同点 → 延長戦（+{tiebreak}pt）を入力してください。",
     "tiebreakSubMissing": "両チームの延長戦要員を登録してください",
     "homeNotCommitted": "Home の {position} を発表してください",
@@ -237,6 +236,18 @@
       "rowResultPending": "—",
       "tiebreakLabel": "同点 → 延長戦",
       "tiebreakNeeded": "延長戦待ち"
+    },
+    "saving": "保存中…",
+    "finalizeButton": "試合を確定する → 終了",
+    "finalizeNotice": {
+      "savedNotice": "クラウドに保存しました。/history からいつでも参照できます。",
+      "signInHeading": "ログインして履歴を保存",
+      "signInBody": "今ログインすると、このスクリムをアカウント履歴に保存できます（端末を変えても残ります）。",
+      "signInCta": "ログイン",
+      "saveFailedHeading": "保存に失敗しました",
+      "saveFailedBody": "通信エラーまたはサーバー側のエラーが発生しました。再度お試しください。",
+      "retry": "再試行",
+      "saving": "保存中…"
     }
   },
   "Common": {
@@ -276,10 +287,17 @@
       "vs": "vs",
       "teamUnnamed": "未命名",
       "deleteLabel": "削除",
-      "openLabel": "開く →"
+      "openLabel": "開く →",
+      "sourceCloud": "クラウド",
+      "sourceLocal": "ローカル",
+      "snapshotOnly": "確定済の記録",
+      "deletePending": "削除中…"
     },
     "deleteConfirm": "このスクリムをブラウザから削除します。よろしいですか？",
-    "deleteAnnouncement": "スクリム {id} を削除しました。"
+    "deleteAnnouncement": "スクリム {id} を削除しました。",
+    "storageNoteSignedIn": "クラウド保存（D1）と、この端末のローカル下書きの両方をまとめて表示しています。",
+    "hybridNote": "クラウド ＋ ローカル の合算表示",
+    "deleteFailed": "削除に失敗しました。再度お試しください。"
   },
   "Legal": {
     "backToHome": "← ホームへ戻る",

@@ -13,18 +13,13 @@ import { BATTLE_POSITIONS, type PlayerSlot } from "@/config/sfl-rules";
 import { useScrimStore, type Player, type Side } from "@/store/scrim";
 import { isPositionCommittedAt } from "@/lib/order-state";
 
-const POSITIONS: ReadonlyArray<PlayerSlot> = [
-  "vanguard",
-  "midfield",
-  "champion",
-  "sub",
-];
+const POSITIONS: ReadonlyArray<PlayerSlot> = [...BATTLE_POSITIONS, "sub"];
 
 // ホーム逐次フローで「次に編集可能になるポジ」の前提条件（直前ポジが committed か）
 const PREVIOUS_POSITION: Partial<Record<PlayerSlot, PlayerSlot>> = {
-  midfield: "vanguard",
-  champion: "midfield",
-  sub: "champion",
+  second: "first",
+  third: "second",
+  sub: "third",
 };
 
 export type OrderFormMode = "bulk" | "sequential";

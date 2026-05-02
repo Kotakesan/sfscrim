@@ -50,9 +50,9 @@
     "ctaCreate": "Create a scrim →",
     "ctaSaveHistory": "View history",
     "stats": {
-      "vanguard": "1st",
-      "midfield": "2nd",
-      "champion": "3rd",
+      "first": "1st",
+      "second": "2nd",
+      "third": "3rd",
       "regularMax": "Sec. Max — Reg.",
       "playoffWin": "First to — Playoff",
       "finalWin": "First to — Final"
@@ -141,9 +141,9 @@
       "away": "Away"
     },
     "positions": {
-      "vanguard": "1st",
-      "midfield": "2nd",
-      "champion": "3rd",
+      "first": "1st",
+      "second": "2nd",
+      "third": "3rd",
       "sub": "Tiebreak"
     },
     "controlTypes": {
@@ -165,7 +165,7 @@
     "announcedLabel": "● Announced",
     "waitingForPrevious": "Editable after the previous position is announced",
     "startScrim": "Lock lineup → Start match",
-    "startScrimHint": "Fill in vanguard / midfield / champion for both teams to enable.",
+    "startScrimHint": "Fill in 1st / 2nd / 3rd for both teams to enable.",
     "inProgressNotice": "Lineup locked. Use the score input below to record match progress.",
     "errors": {
       "requiredPosition": "Player name for {position} is empty.",
@@ -186,9 +186,9 @@
     "winnerSuffix": "Winner: {name}",
     "teamUnnamed": "(unnamed)",
     "positions": {
-      "vanguard": "1st",
-      "midfield": "2nd",
-      "champion": "3rd",
+      "first": "1st",
+      "second": "2nd",
+      "third": "3rd",
       "tiebreak": "Tiebreak"
     },
     "sides": {

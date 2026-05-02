@@ -4,9 +4,9 @@
 
 export const SFL_RULES = {
   position: {
-    vanguard: { points: 10, format: "Bo3" },
-    midfield: { points: 10, format: "Bo3" },
-    champion: { points: 20, format: "Bo5" },
+    first: { points: 10, format: "Bo3" },
+    second: { points: 10, format: "Bo3" },
+    third: { points: 20, format: "Bo5" },
     tiebreak: { points: 10, format: "Bo3" },
   },
   format: {
@@ -16,13 +16,13 @@ export const SFL_RULES = {
   },
 } as const;
 
-// 通常バトルの 3 ポジション（先鋒・中堅・大将）
-export type BattlePosition = "vanguard" | "midfield" | "champion";
+// 通常バトルの 3 ポジション（先鋒・中堅・大将 / 1st・2nd・3rd）
+export type BattlePosition = "first" | "second" | "third";
 
 export const BATTLE_POSITIONS = [
-  "vanguard",
-  "midfield",
-  "champion",
+  "first",
+  "second",
+  "third",
 ] as const satisfies readonly BattlePosition[];
 
 // 選手登録用：通常 3 ポジション + 控え

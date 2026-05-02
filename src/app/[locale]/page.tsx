@@ -17,18 +17,18 @@ export default async function Home({
 
   const stats = [
     {
-      label: t("stats.vanguard"),
-      value: `+${SFL_RULES.position.vanguard.points}`,
+      label: t("stats.first"),
+      value: `+${SFL_RULES.position.first.points}`,
       accent: false,
     },
     {
-      label: t("stats.midfield"),
-      value: `+${SFL_RULES.position.midfield.points}`,
+      label: t("stats.second"),
+      value: `+${SFL_RULES.position.second.points}`,
       accent: false,
     },
     {
-      label: t("stats.champion"),
-      value: `+${SFL_RULES.position.champion.points}`,
+      label: t("stats.third"),
+      value: `+${SFL_RULES.position.third.points}`,
       accent: true,
     },
     {

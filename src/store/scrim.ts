@@ -85,6 +85,51 @@ const updateScrim = (
   return { ...scrims, [id]: patch(current) };
 };
 
+// v0 → v1: ポジション識別子を SFL 公式英語表記由来に統一
+// vanguard / midfield / champion → first / second / third（sub / tiebreak は変更なし）
+const POSITION_RENAME_V0_TO_V1: Record<string, string> = {
+  vanguard: "first",
+  midfield: "second",
+  champion: "third",
+};
+
+function renamePosition(value: string): string {
+  return POSITION_RENAME_V0_TO_V1[value] ?? value;
+}
+
+type PersistedV0 = { scrims?: Record<string, ScrimState> };
+type PersistedV1 = { scrims: Record<string, ScrimState> };
+
+function migrateV0ToV1(state: unknown): PersistedV1 {
+  const s = state as PersistedV0;
+  if (!s?.scrims) return { scrims: {} };
+  const scrims: Record<string, ScrimState> = {};
+  for (const [id, scrim] of Object.entries(s.scrims)) {
+    scrims[id] = {
+      ...scrim,
+      teams: {
+        home: renameTeamPositions(scrim.teams.home),
+        away: renameTeamPositions(scrim.teams.away),
+      },
+      matches: scrim.matches.map((m) => ({
+        ...m,
+        position: renamePosition(m.position) as MatchPosition,
+      })),
+    };
+  }
+  return { scrims };
+}
+
+function renameTeamPositions(team: ScrimState["teams"]["home"]): ScrimState["teams"]["home"] {
+  return {
+    ...team,
+    players: team.players.map((p) => ({
+      ...p,
+      position: renamePosition(p.position) as PlayerSlot,
+    })),
+  };
+}
+
 export const useScrimStore = create<ScrimStore>()(
   persist(
     (set, get) => ({
@@ -209,6 +254,11 @@ export const useScrimStore = create<ScrimStore>()(
     {
       name: STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
+      version: 1,
+      migrate: (persistedState, fromVersion) => {
+        if (fromVersion === 0) return migrateV0ToV1(persistedState);
+        return persistedState as ScrimStore;
+      },
     },
   ),
 );

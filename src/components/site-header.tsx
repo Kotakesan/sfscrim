@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { HeaderAuth } from "@/components/header-auth";
 
 export async function SiteHeader() {
   const t = await getTranslations("Legal");
@@ -29,6 +30,7 @@ export async function SiteHeader() {
               {t("backToHome")}
             </Link>
             <LocaleSwitcher />
+            <HeaderAuth />
           </div>
         </div>
       </div>

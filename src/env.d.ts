@@ -5,6 +5,9 @@ declare global {
     DB: D1Database;
     ASSETS: Fetcher;
     APP_ENV: string;
+    // Better Auth — dev は .dev.vars / wrangler env vars、本番は Cloudflare Secrets で設定。
+    BETTER_AUTH_SECRET: string;
+    BETTER_AUTH_URL?: string;
   }
 }
 

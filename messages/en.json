@@ -33,6 +33,10 @@
     "contact": {
       "title": "Contact",
       "description": "Send feedback, bug reports, and feature requests for SFScrim."
+    },
+    "login": {
+      "title": "Sign in",
+      "description": "Sign in to SFScrim to save and browse your scrim history."
     }
   },
   "Landing": {
@@ -351,6 +355,24 @@
       "githubLabel": "Open GitHub Issues →",
       "githubUrl": "https://github.com/Kotakesan/sfscrim/issues",
       "responseHint": "This is an individually operated project — replies may take some time. Thanks for your patience."
+    }
+  },
+  "Auth": {
+    "header": {
+      "signIn": "Sign in",
+      "signOut": "Sign out",
+      "menuLabel": "{name} menu"
+    },
+    "login": {
+      "title": "Sign in",
+      "description": "Sign in to attach finalized scrims to your account so they show up in History.",
+      "mockHeading": "Sign in with the test user",
+      "mockBody": "In dev environments, a fixed mock user is provided so you can preview the signed-in flow. In production this will be replaced with Discord / Google sign-in.",
+      "mockButton": "Sign in as test user",
+      "errorGeneric": "Sign-in failed. Please try again.",
+      "loading": "Loading…",
+      "comingSoonHeading": "Coming soon",
+      "comingSoonBody": "Discord / Google sign-in will be enabled shortly."
     }
   }
 }

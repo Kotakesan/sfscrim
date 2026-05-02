@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import {
@@ -18,13 +19,23 @@ import {
 } from "@/store/scrim";
 import { formatPlayerLabel } from "@/lib/player-format";
 import { findPlayer, isPositionCommittedAt } from "@/lib/order-state";
+import { useSession } from "@/lib/auth/client";
+import { serializeScrim } from "@/lib/scrim/snapshot";
 import { LiveDashboard } from "./live-dashboard";
+
+type FinalizeOutcome =
+  | { kind: "saved" }
+  | { kind: "signin-required" }
+  | { kind: "save-failed" };
 
 export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
   const t = useTranslations("Score");
   const recordMatch = useScrimStore((s) => s.recordMatch);
   const undoLast = useScrimStore((s) => s.undoLastMatch);
   const setStatus = useScrimStore((s) => s.setStatus);
+  const { data: session } = useSession();
+  const [finalizeOutcome, setFinalizeOutcome] = useState<FinalizeOutcome | null>(null);
+  const [savePending, setSavePending] = useState(false);
 
   const next = nextRegularBattle(scrim.matches);
   const outcome = regularSeasonOutcome(scrim);
@@ -53,9 +64,56 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
   const onUndo = () => {
     undoLast(scrim.id);
     if (scrim.status === "finished") setStatus(scrim.id, "in_progress");
+    setFinalizeOutcome(null);
   };
 
-  const onFinalize = () => setStatus(scrim.id, "finished");
+  const trySave = async (state: ScrimState) => {
+    setSavePending(true);
+    try {
+      const res = await fetch("/api/scrim/finalize", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(serializeScrim(state)),
+      });
+      setFinalizeOutcome(res.ok ? { kind: "saved" } : { kind: "save-failed" });
+    } catch {
+      setFinalizeOutcome({ kind: "save-failed" });
+    } finally {
+      setSavePending(false);
+    }
+  };
+
+  const onFinalize = async () => {
+    setStatus(scrim.id, "finished");
+    if (!session?.user) {
+      setFinalizeOutcome({ kind: "signin-required" });
+      return;
+    }
+    await trySave({ ...scrim, status: "finished" });
+  };
+
+  const onRetrySave = async () => {
+    if (!session?.user || savePending) return;
+    await trySave(scrim);
+  };
+
+  // ログアウト中に finalize して localStorage に finished のまま残った scrim を、
+  // 後でログイン直後に自動で D1 へ同期する（finalize は idempotent な UPSERT）。
+  // 同セッション内 1 回だけ実行する。
+  const autoSyncedRef = useRef(false);
+  const userId = session?.user?.id;
+  useEffect(() => {
+    if (autoSyncedRef.current) return;
+    if (scrim.status !== "finished" || !userId) return;
+    autoSyncedRef.current = true;
+    // setState を effect 同期で呼ばない（react-hooks/set-state-in-effect 回避）。
+    // microtask に流して mount 直後の render commit 後に走らせる。
+    queueMicrotask(() => {
+      void trySave(scrim);
+    });
+    // trySave は最新 scrim を closure で参照する。trySave は依存追跡しない。
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scrim.status, userId]);
 
   return (
     <section className="mt-12">
@@ -107,9 +165,10 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
           <button
             type="button"
             onClick={onFinalize}
-            className="inline-flex h-11 items-center border-2 border-accent bg-accent px-5 font-display text-sm font-semibold text-bg transition-colors hover:border-ink hover:bg-ink"
+            disabled={savePending}
+            className="inline-flex h-11 items-center border-2 border-accent bg-accent px-5 font-display text-sm font-semibold text-bg transition-colors hover:border-ink hover:bg-ink disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {t("finalize")}
+            {savePending ? t("saving") : t("finalizeButton")}
           </button>
         )}
 
@@ -121,7 +180,70 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
           </span>
         )}
       </div>
+
+      {scrim.status === "finished" && finalizeOutcome && (
+        <FinalizeNotice
+          outcome={finalizeOutcome}
+          savePending={savePending}
+          onRetry={onRetrySave}
+        />
+      )}
     </section>
+  );
+}
+
+function FinalizeNotice({
+  outcome,
+  savePending,
+  onRetry,
+}: {
+  outcome: FinalizeOutcome;
+  savePending: boolean;
+  onRetry: () => void;
+}) {
+  const t = useTranslations("Score.finalizeNotice");
+  if (outcome.kind === "saved") {
+    return (
+      <p className="mt-4 border-2 border-line px-4 py-3 font-mono text-xs uppercase tracking-[0.16em] text-muted">
+        {t("savedNotice")}
+      </p>
+    );
+  }
+  if (outcome.kind === "signin-required") {
+    return (
+      <div className="mt-4 border-2 border-accent bg-accent-soft p-4">
+        <h3 className="m-0 font-display text-base font-bold tracking-[-0.01em]">
+          {t("signInHeading")}
+        </h3>
+        <p className="mt-2 font-mono text-xs leading-relaxed text-ink-2">
+          {t("signInBody")}
+        </p>
+        <Link
+          href="/login"
+          className="mt-3 inline-flex h-10 items-center border-2 border-accent bg-accent px-5 font-display text-xs font-semibold text-bg transition-colors hover:border-ink hover:bg-ink"
+        >
+          {t("signInCta")} →
+        </Link>
+      </div>
+    );
+  }
+  return (
+    <div role="alert" className="mt-4 border-2 border-accent bg-accent-soft p-4">
+      <h3 className="m-0 font-display text-base font-bold tracking-[-0.01em]">
+        {t("saveFailedHeading")}
+      </h3>
+      <p className="mt-2 font-mono text-xs leading-relaxed text-ink-2">
+        {t("saveFailedBody")}
+      </p>
+      <button
+        type="button"
+        onClick={onRetry}
+        disabled={savePending}
+        className="mt-3 inline-flex h-10 items-center border-2 border-ink bg-transparent px-5 font-display text-xs font-semibold text-ink transition-colors hover:bg-ink hover:text-bg disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        {savePending ? t("saving") : t("retry")}
+      </button>
+    </div>
   );
 }
 

@@ -40,7 +40,7 @@ export function isMainBattleCommitted(players: Player[]): boolean {
 // ホーム側で「先鋒だけ確定済」を判定する。SFL のホーム逐次申告フローでは、
 // ホームは先鋒さえ発表されれば試合開始可（中堅・大将は試合進行中に逐次発表）。
 export function isHomeReadyToStart(players: Player[]): boolean {
-  return isPositionCommittedAt(players, "vanguard");
+  return isPositionCommittedAt(players, "first");
 }
 
 export function isOrderComplete(scrim: ScrimState): boolean {

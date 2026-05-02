@@ -5,21 +5,17 @@ import { getCharacterName } from "@/config/characters";
 import type { Team, Player } from "@/store/scrim";
 import { isPositionCommittedAt } from "@/lib/order-state";
 
-import { SFL_RULES, type PlayerSlot } from "@/config/sfl-rules";
+import { BATTLE_POSITIONS, SFL_RULES, type PlayerSlot } from "@/config/sfl-rules";
 
-const POSITION_ORDER: ReadonlyArray<PlayerSlot> = [
-  "vanguard",
-  "midfield",
-  "champion",
-  "sub",
-];
+const POSITION_ORDER: ReadonlyArray<PlayerSlot> = [...BATTLE_POSITIONS, "sub"];
 
+// sub は延長戦員の選手登録なので format は SFL_RULES.position.tiebreak と同じ
 const POSITION_FORMAT: Record<PlayerSlot, string> = {
-  vanguard: SFL_RULES.position.vanguard.format,
-  midfield: SFL_RULES.position.midfield.format,
-  champion: SFL_RULES.position.champion.format,
+  ...Object.fromEntries(
+    BATTLE_POSITIONS.map((p) => [p, SFL_RULES.position[p].format]),
+  ),
   sub: SFL_RULES.position.tiebreak.format,
-};
+} as Record<PlayerSlot, string>;
 
 export function LineupPreview({ home, away }: { home: Team; away: Team }) {
   const t = useTranslations("Order");

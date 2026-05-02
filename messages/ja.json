@@ -50,9 +50,9 @@
     "ctaCreate": "スクリムを作成 →",
     "ctaSaveHistory": "履歴を見る",
     "stats": {
-      "vanguard": "先鋒 / VG",
-      "midfield": "中堅 / Mid",
-      "champion": "大将 / Champion",
+      "first": "先鋒 / 1st",
+      "second": "中堅 / 2nd",
+      "third": "大将 / 3rd",
       "regularMax": "節 Max — Reg.",
       "playoffWin": "先取 — Playoff",
       "finalWin": "先取 — Final"
@@ -141,9 +141,9 @@
       "away": "Away / 敵軍"
     },
     "positions": {
-      "vanguard": "先鋒",
-      "midfield": "中堅",
-      "champion": "大将",
+      "first": "先鋒",
+      "second": "中堅",
+      "third": "大将",
       "sub": "延長戦"
     },
     "controlTypes": {
@@ -186,9 +186,9 @@
     "winnerSuffix": "Winner: {name}",
     "teamUnnamed": "未命名",
     "positions": {
-      "vanguard": "先鋒",
-      "midfield": "中堅",
-      "champion": "大将",
+      "first": "先鋒",
+      "second": "中堅",
+      "third": "大将",
       "tiebreak": "延長戦"
     },
     "sides": {

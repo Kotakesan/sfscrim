@@ -6,9 +6,9 @@ import {
 import type { MatchRecord, ScrimState, Side } from "@/store/scrim";
 
 export const REGULAR_BATTLE_ORDER: ReadonlyArray<BattlePosition> = [
-  "vanguard",
-  "midfield",
-  "champion",
+  "first",
+  "second",
+  "third",
 ];
 
 export type ScoreSummary = {

@@ -10,6 +10,8 @@ export function HeaderAuth() {
   const router = useRouter();
   const { data: session, isPending } = useSession();
   const [open, setOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -57,6 +59,29 @@ export function HeaderAuth() {
     router.refresh();
   };
 
+  const handleDeleteAccount = async () => {
+    if (deleting) return;
+    if (!window.confirm(t("deleteAccountConfirm"))) return;
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      const res = await fetch("/api/account/delete", { method: "POST" });
+      if (!res.ok) {
+        setDeleteError(t("deleteAccountFailed"));
+        return;
+      }
+      // Better Auth client cache を破棄するため signOut を呼ぶ（cookie は API で消去済み）
+      await signOut().catch(() => {});
+      setOpen(false);
+      router.replace("/");
+      router.refresh();
+    } catch {
+      setDeleteError(t("deleteAccountFailed"));
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   return (
     <div ref={wrapperRef} className="relative">
       <button
@@ -71,7 +96,7 @@ export function HeaderAuth() {
         {initial}
       </button>
       {open && (
-        <div className="absolute right-0 top-[calc(100%+8px)] z-40 min-w-[200px] border-2 border-ink bg-bg p-3 shadow-[4px_4px_0_0_var(--color-ink)]">
+        <div className="absolute right-0 top-[calc(100%+8px)] z-40 min-w-[220px] border-2 border-ink bg-bg p-3 shadow-[4px_4px_0_0_var(--color-ink)]">
           <div className="px-2 py-1 font-display text-sm font-semibold text-ink">
             {user.name ?? user.email}
           </div>
@@ -90,7 +115,24 @@ export function HeaderAuth() {
             >
               {t("signOut")}
             </button>
+            <button
+              type="button"
+              role="menuitem"
+              onClick={handleDeleteAccount}
+              disabled={deleting}
+              className="mt-1 block w-full px-2 py-1.5 text-left font-mono text-xs uppercase tracking-[0.18em] text-accent hover:bg-accent hover:text-bg focus-visible:bg-accent focus-visible:text-bg focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {deleting ? t("deleteAccountPending") : t("deleteAccount")}
+            </button>
           </div>
+          {deleteError && (
+            <p
+              role="alert"
+              className="mt-3 border border-accent bg-accent-soft px-2 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-accent"
+            >
+              {deleteError}
+            </p>
+          )}
         </div>
       )}
     </div>

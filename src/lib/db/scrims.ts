@@ -45,8 +45,20 @@ export async function saveScrimSnapshot(
   snap: ScrimSnapshot,
 ): Promise<void> {
   const stmts = [
-    db.prepare("DELETE FROM scrim_users WHERE scrim_id = ?").bind(snap.id),
-    db.prepare("DELETE FROM scrim_matches WHERE scrim_id = ?").bind(snap.id),
+    // 子表の DELETE にも owner 条件を入れる（race で別 owner が先に scrims を作っていた場合、
+    // 攻撃者の子データで上書きしないため）。NOT EXISTS で「scrims が未作成」or「自分の所有」のみ通す。
+    db
+      .prepare(
+        `DELETE FROM scrim_users WHERE scrim_id = ?1
+           AND NOT EXISTS (SELECT 1 FROM scrims WHERE id = ?1 AND created_by != ?2)`,
+      )
+      .bind(snap.id, ownerUserId),
+    db
+      .prepare(
+        `DELETE FROM scrim_matches WHERE scrim_id = ?1
+           AND NOT EXISTS (SELECT 1 FROM scrims WHERE id = ?1 AND created_by != ?2)`,
+      )
+      .bind(snap.id, ownerUserId),
     db
       .prepare(
         `INSERT INTO scrims (id, created_by, format, status, team_home_name, team_away_name, created_at, finalized_at, deleted_at)
@@ -68,21 +80,25 @@ export async function saveScrimSnapshot(
         snap.createdAt,
         snap.finalizedAt,
       ),
+    // 子 INSERT も owner check 付き SELECT 経由にし、race で別 owner が parent を保持して
+    // いた場合の上書きを完全に閉じる（INSERT-SELECT は WHERE 不一致で 0 行になる）。
     ...snap.players.map((p) =>
       db
         .prepare(
           `INSERT INTO scrim_users (scrim_id, user_id, side, position, display_name, character_id, control_type)
-           VALUES (?, NULL, ?, ?, ?, ?, ?)`,
+           SELECT ?1, NULL, ?3, ?4, ?5, ?6, ?7 FROM scrims
+           WHERE id = ?1 AND created_by = ?2`,
         )
-        .bind(snap.id, p.side, p.position, p.displayName, p.characterId, p.controlType),
+        .bind(snap.id, ownerUserId, p.side, p.position, p.displayName, p.characterId, p.controlType),
     ),
     ...snap.matches.map((m) =>
       db
         .prepare(
           `INSERT INTO scrim_matches (scrim_id, round_no, position, winner_side, points)
-           VALUES (?, ?, ?, ?, ?)`,
+           SELECT ?1, ?3, ?4, ?5, ?6 FROM scrims
+           WHERE id = ?1 AND created_by = ?2`,
         )
-        .bind(snap.id, m.roundNo, m.position, m.winnerSide, m.points),
+        .bind(snap.id, ownerUserId, m.roundNo, m.position, m.winnerSide, m.points),
     ),
   ];
   await db.batch(stmts);

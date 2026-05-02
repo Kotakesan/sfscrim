@@ -14,27 +14,34 @@ const MATCH_POSITIONS = new Set(["first", "second", "third", "tiebreak"]);
 const FORMATS = new Set(["regular", "playoff", "final"]);
 const CONTROLS = new Set(["classic", "modern"]);
 
+const ID_RE = /^[A-Za-z0-9_-]{4,64}$/;
+const NAME_MAX = 200;
+const POINTS_MAX = 1000; // 最大 1 試合 1000pt（実運用は 90pt 上限）
+
+const isPosInt = (v: unknown): v is number =>
+  typeof v === "number" && Number.isInteger(v) && v >= 0;
+
 function isValidSnapshot(input: unknown): input is ScrimSnapshot {
   if (!input || typeof input !== "object") return false;
   const o = input as Record<string, unknown>;
-  if (typeof o.id !== "string" || o.id.length === 0) return false;
+  if (typeof o.id !== "string" || !ID_RE.test(o.id)) return false;
   if (typeof o.format !== "string" || !FORMATS.has(o.format)) return false;
-  if (typeof o.createdAt !== "number" || typeof o.finalizedAt !== "number") return false;
-  if (o.teamHomeName !== null && typeof o.teamHomeName !== "string") return false;
-  if (o.teamAwayName !== null && typeof o.teamAwayName !== "string") return false;
+  if (!isPosInt(o.createdAt) || !isPosInt(o.finalizedAt)) return false;
+  if (o.teamHomeName !== null && (typeof o.teamHomeName !== "string" || o.teamHomeName.length > NAME_MAX)) return false;
+  if (o.teamAwayName !== null && (typeof o.teamAwayName !== "string" || o.teamAwayName.length > NAME_MAX)) return false;
   if (!Array.isArray(o.players) || !Array.isArray(o.matches)) return false;
   for (const p of o.players as Array<Record<string, unknown>>) {
     if (typeof p.side !== "string" || !SIDES.has(p.side)) return false;
     if (typeof p.position !== "string" || !PLAYER_POSITIONS.has(p.position)) return false;
-    if (typeof p.displayName !== "string" || p.displayName.length === 0) return false;
-    if (p.characterId !== null && typeof p.characterId !== "number") return false;
+    if (typeof p.displayName !== "string" || p.displayName.length === 0 || p.displayName.length > NAME_MAX) return false;
+    if (p.characterId !== null && !isPosInt(p.characterId)) return false;
     if (p.controlType !== null && (typeof p.controlType !== "string" || !CONTROLS.has(p.controlType))) return false;
   }
   for (const m of o.matches as Array<Record<string, unknown>>) {
-    if (typeof m.roundNo !== "number") return false;
+    if (!isPosInt(m.roundNo) || (m.roundNo as number) < 1) return false;
     if (typeof m.position !== "string" || !MATCH_POSITIONS.has(m.position)) return false;
     if (typeof m.winnerSide !== "string" || !SIDES.has(m.winnerSide)) return false;
-    if (typeof m.points !== "number") return false;
+    if (!isPosInt(m.points) || (m.points as number) > POINTS_MAX) return false;
   }
   return true;
 }

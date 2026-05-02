@@ -99,7 +99,9 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
 
   // ログアウト中に finalize して localStorage に finished のまま残った scrim を、
   // 後でログイン直後に自動で D1 へ同期する（finalize は idempotent な UPSERT）。
-  // 同セッション内 1 回だけ実行する。
+  // ref は mount スコープのため、scrim/[id] 再訪問のたびに 1 回 POST が走る。
+  // 副作用は idempotent UPSERT なので無害だが、頻発するなら zustand に
+  // `lastSyncedAt` を持たせて二重発火を抑止する余地あり（後続 issue 候補）。
   const autoSyncedRef = useRef(false);
   const userId = session?.user?.id;
   useEffect(() => {
@@ -204,14 +206,22 @@ function FinalizeNotice({
   const t = useTranslations("Score.finalizeNotice");
   if (outcome.kind === "saved") {
     return (
-      <p className="mt-4 border-2 border-line px-4 py-3 font-mono text-xs uppercase tracking-[0.16em] text-muted">
+      <p
+        role="status"
+        aria-live="polite"
+        className="mt-4 border-2 border-line px-4 py-3 font-mono text-xs uppercase tracking-[0.16em] text-muted"
+      >
         {t("savedNotice")}
       </p>
     );
   }
   if (outcome.kind === "signin-required") {
     return (
-      <div className="mt-4 border-2 border-accent bg-accent-soft p-4">
+      <div
+        role="status"
+        aria-live="polite"
+        className="mt-4 border-2 border-accent bg-accent-soft p-4"
+      >
         <h3 className="m-0 font-display text-base font-bold tracking-[-0.01em]">
           {t("signInHeading")}
         </h3>

@@ -44,6 +44,7 @@ export function HistoryList({ signedIn, storedScrims }: HistoryListProps) {
   const [announcement, setAnnouncement] = useState("");
   const [d1Deleted, setD1Deleted] = useState<Set<string>>(new Set());
   const [deletePending, setDeletePending] = useState<Set<string>>(new Set());
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const merged = useMemo<HistoryEntry[]>(() => {
     if (!hydrated) return [];
@@ -102,6 +103,7 @@ export function HistoryList({ signedIn, storedScrims }: HistoryListProps) {
 
   const handleDelete = async (entry: HistoryEntry) => {
     if (!window.confirm(t("deleteConfirm"))) return;
+    setDeleteError(null);
     if (entry.source === "d1") {
       setDeletePending((prev) => new Set(prev).add(entry.id));
       try {
@@ -112,8 +114,10 @@ export function HistoryList({ signedIn, storedScrims }: HistoryListProps) {
           setD1Deleted((prev) => new Set(prev).add(entry.id));
           setAnnouncement(t("deleteAnnouncement", { id: entry.id.slice(0, 6) }));
         } else {
-          window.alert(t("deleteFailed"));
+          setDeleteError(t("deleteFailed"));
         }
+      } catch {
+        setDeleteError(t("deleteFailed"));
       } finally {
         setDeletePending((prev) => {
           const next = new Set(prev);
@@ -132,6 +136,14 @@ export function HistoryList({ signedIn, storedScrims }: HistoryListProps) {
       {signedIn && (
         <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-muted">
           {t("hybridNote")}
+        </p>
+      )}
+      {deleteError && (
+        <p
+          role="alert"
+          className="mb-4 border-2 border-accent bg-accent-soft px-4 py-3 font-mono text-xs uppercase tracking-[0.16em] text-accent"
+        >
+          {deleteError}
         </p>
       )}
       <ul className="grid gap-4 sm:grid-cols-2">

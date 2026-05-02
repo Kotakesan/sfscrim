@@ -290,7 +290,7 @@
       "openLabel": "開く →",
       "sourceCloud": "クラウド",
       "sourceLocal": "ローカル",
-      "snapshotOnly": "確定済 snapshot",
+      "snapshotOnly": "確定済の記録",
       "deletePending": "削除中…"
     },
     "deleteConfirm": "このスクリムをブラウザから削除します。よろしいですか？",

@@ -35,6 +35,8 @@ export async function findScrimOwner(
 }
 
 // finalize 済みスクリムの immutable snapshot を保存する（同 ID の上書きは owner のみ）。
+// ON CONFLICT 句の WHERE で `created_by = ?` を組み込み、別 owner の row を上書きしない
+// atomic UPSERT にする（race window で他人が先に INSERT したケースを閉じる）。
 // 子表は INSERT OR REPLACE ではなく DELETE → INSERT。新 snapshot が rows を減らすケース
 // （sub を後から外した等）でも残骸を残さないため。
 export async function saveScrimSnapshot(
@@ -48,13 +50,14 @@ export async function saveScrimSnapshot(
     db
       .prepare(
         `INSERT INTO scrims (id, created_by, format, status, team_home_name, team_away_name, created_at, finalized_at, deleted_at)
-         VALUES (?, ?, ?, 'finished', ?, ?, ?, ?, NULL)
+         VALUES (?1, ?2, ?3, 'finished', ?4, ?5, ?6, ?7, NULL)
          ON CONFLICT(id) DO UPDATE SET
            format = excluded.format,
            team_home_name = excluded.team_home_name,
            team_away_name = excluded.team_away_name,
            finalized_at = excluded.finalized_at,
-           deleted_at = NULL`,
+           deleted_at = NULL
+         WHERE scrims.created_by = ?2`,
       )
       .bind(
         snap.id,

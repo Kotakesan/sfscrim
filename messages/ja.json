@@ -359,7 +359,7 @@
   },
   "Auth": {
     "header": {
-      "signIn": "Sign in",
+      "signIn": "ログイン",
       "signOut": "ログアウト",
       "menuLabel": "{name} メニュー"
     },

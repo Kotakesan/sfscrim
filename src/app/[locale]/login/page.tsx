@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { setRequestLocale, getTranslations } from "next-intl/server";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { localeHref, buildLanguageAlternates } from "@/i18n/routing";
-import { isDevEnv } from "@/config/site";
+import { isMockAuthEnabledFromEnv } from "@/config/site";
 import { PageShell } from "@/components/page-shell";
 import { LoginForm } from "./login-form";
 
@@ -32,7 +33,8 @@ export default async function LoginPage({
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations("Auth.login");
-  const mockEnabled = await isDevEnv();
+  const { env } = await getCloudflareContext({ async: true });
+  const mockEnabled = isMockAuthEnabledFromEnv(env);
 
   return (
     <PageShell maxWidth="narrow">

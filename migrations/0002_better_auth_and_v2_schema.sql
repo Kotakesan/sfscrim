@@ -91,8 +91,10 @@ CREATE TABLE scrims (
   deleted_at        INTEGER
 );
 
--- created_by + finalized_at 降順検索が /history のホット path
-CREATE INDEX idx_scrims_created_by ON scrims(created_by, finalized_at DESC);
+-- created_by + finalized_at 降順検索が /history のホット path。
+-- soft delete された scrim は表示しないので partial index で除外し index を小さく保つ。
+CREATE INDEX idx_scrims_created_by ON scrims(created_by, finalized_at DESC)
+  WHERE deleted_at IS NULL;
 
 CREATE TABLE scrim_users (
   scrim_id        TEXT NOT NULL REFERENCES scrims(id) ON DELETE CASCADE,

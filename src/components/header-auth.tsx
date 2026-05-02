@@ -40,7 +40,7 @@ export function HeaderAuth() {
     return (
       <Link
         href="/login"
-        className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted hover:text-ink hover:underline focus-visible:text-ink focus-visible:underline focus-visible:outline-none"
+        className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted hover:text-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent"
       >
         {t("signIn")}
       </Link>
@@ -66,7 +66,7 @@ export function HeaderAuth() {
         aria-haspopup="menu"
         aria-expanded={open}
         aria-label={t("menuLabel", { name: user.name ?? user.email })}
-        className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-line bg-bg font-display text-sm font-bold text-ink transition-colors hover:border-ink focus-visible:border-ink focus-visible:outline-none"
+        className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-line bg-bg font-display text-sm font-bold text-ink transition-colors hover:border-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
       >
         {initial}
       </button>

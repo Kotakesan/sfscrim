@@ -39,9 +39,10 @@ function forwardCookies(upstream: Response): Response {
   // 個別に append する。
   const headers = new Headers();
   const setCookies = upstream.headers.getSetCookie?.() ?? [];
+  // body を JSON に差し替えるため、長さ・エンコーディング系は upstream のものを破棄する。
+  const STRIP = new Set(["content-length", "content-encoding", "transfer-encoding", "set-cookie"]);
   upstream.headers.forEach((value, key) => {
-    const k = key.toLowerCase();
-    if (k === "content-length" || k === "set-cookie") return;
+    if (STRIP.has(key.toLowerCase())) return;
     headers.append(key, value);
   });
   for (const cookie of setCookies) headers.append("set-cookie", cookie);

@@ -1,6 +1,4 @@
-// Better Auth サーバインスタンス。Cloudflare Workers では D1 binding が isolate ごとに
-// 安定しているので、binding identity をキーにキャッシュする（毎リクエストで drizzle +
-// betterAuth を組み立て直すと、ルートテーブル構築コストがリクエスト毎に発生する）。
+// Better Auth サーバインスタンス。
 //
 // Mock 戦略: APP_ENV !== "production" のときだけ emailAndPassword を有効化する。
 // 本番では戦略ごと未登録になるため `/api/auth/sign-in/email` 等もすべて 404 になる。
@@ -24,6 +22,11 @@ export const MOCK_TEST_USER = {
 export type AuthInstance = ReturnType<typeof buildAuth>;
 
 export function buildAuth(env: CloudflareEnv) {
+  // 本番で BETTER_AUTH_SECRET が未設定だと Better Auth はランダム fallback を使い、
+  // isolate 間で署名が不一致になり session が壊れる。早期 fail-loud で気付けるようにする。
+  if (env.APP_ENV === "production" && !env.BETTER_AUTH_SECRET) {
+    throw new Error("BETTER_AUTH_SECRET is required in production");
+  }
   const db = drizzle(env.DB, { schema: authSchema });
   const mockEnabled = isMockAuthEnabledFromEnv(env);
 
@@ -42,13 +45,18 @@ export function buildAuth(env: CloudflareEnv) {
   });
 }
 
-let cached: { db: D1Database; auth: AuthInstance } | null = null;
+// 同じ D1 binding を見たら同じ Better Auth instance を再利用する（route table 構築コストを
+// 減らす）。WeakMap なので binding が破棄されればエントリも GC される。
+const authByDb = new WeakMap<D1Database, AuthInstance>();
 
 export async function getAuth(): Promise<AuthInstance> {
   const { env } = await getCloudflareContext({ async: true });
-  if (cached?.db === env.DB) return cached.auth;
-  cached = { db: env.DB, auth: buildAuth(env) };
-  return cached.auth;
+  let auth = authByDb.get(env.DB);
+  if (!auth) {
+    auth = buildAuth(env);
+    authByDb.set(env.DB, auth);
+  }
+  return auth;
 }
 
 export type SessionContext = Awaited<ReturnType<AuthInstance["api"]["getSession"]>>;

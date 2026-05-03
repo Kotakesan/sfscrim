@@ -379,7 +379,11 @@
     "header": {
       "signIn": "Sign in",
       "signOut": "Sign out",
-      "menuLabel": "{name} menu"
+      "menuLabel": "{name} menu",
+      "deleteAccount": "Delete account",
+      "deleteAccountPending": "Deleting…",
+      "deleteAccountConfirm": "Are you sure you want to delete your account? Your saved scrim history will be hidden (player history remains visible to other accounts).",
+      "deleteAccountFailed": "Failed to delete the account. Please try again."
     },
     "login": {
       "title": "Sign in",

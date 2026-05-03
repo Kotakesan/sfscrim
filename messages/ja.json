@@ -379,7 +379,11 @@
     "header": {
       "signIn": "ログイン",
       "signOut": "ログアウト",
-      "menuLabel": "{name} メニュー"
+      "menuLabel": "{name} メニュー",
+      "deleteAccount": "アカウント削除",
+      "deleteAccountPending": "削除中…",
+      "deleteAccountConfirm": "本当にアカウントを削除しますか？保存済のスクリム履歴も非表示になります（player 履歴は他の人の側に残ります）。",
+      "deleteAccountFailed": "アカウントの削除に失敗しました。再度お試しください。"
     },
     "login": {
       "title": "ログイン",

@@ -6,11 +6,17 @@ import { NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { isMockAuthEnabledFromEnv } from "@/config/site";
 import { getAuth, MOCK_TEST_USER } from "@/lib/auth/server";
+import { isAccountDeleted } from "@/lib/db/account";
 
 export async function POST(request: Request): Promise<Response> {
   const { env } = await getCloudflareContext({ async: true });
   if (!isMockAuthEnabledFromEnv(env)) {
     return new NextResponse("Not Found", { status: 404 });
+  }
+
+  // 削除済アカウントの再ログインを拒否（issue #82 PR-C: 再ログイン不可要件）
+  if (await isAccountDeleted(env.DB, MOCK_TEST_USER.email)) {
+    return NextResponse.json({ error: "account_deleted" }, { status: 410 });
   }
 
   const auth = await getAuth();

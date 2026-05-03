@@ -46,6 +46,9 @@ export function buildAuth(env: CloudflareEnv) {
       : { enabled: false },
     // 削除済アカウントの再ログインを Better Auth の sign-in 全経路で拒否する。
     // test-login route の早期 check と組み合わせて defense-in-depth。
+    // OAuth (Discord/Google #11/#12) を後で追加する場合は、callback hook で provider account
+    // から user に解決した直後に同等の isAccountDeleted check を入れる必要がある（OAuth flow
+    // では body に email が無いため、現在の before hook では捕捉できない）。
     hooks: {
       before: createAuthMiddleware(async (ctx) => {
         if (!ctx.path.startsWith("/sign-in")) return;

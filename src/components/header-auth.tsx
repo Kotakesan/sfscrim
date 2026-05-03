@@ -18,6 +18,8 @@ export function HeaderAuth() {
   useEffect(() => {
     if (!open) return;
     const onClick = (e: MouseEvent) => {
+      // 削除失敗 banner 表示中は外クリックで閉じない（ユーザーが alert を読み逃す可能性回避）
+      if (deleteError) return;
       if (!wrapperRef.current?.contains(e.target as Node)) setOpen(false);
     };
     const onKey = (e: KeyboardEvent) => {
@@ -32,7 +34,7 @@ export function HeaderAuth() {
       document.removeEventListener("mousedown", onClick);
       document.removeEventListener("keydown", onKey);
     };
-  }, [open]);
+  }, [open, deleteError]);
 
   if (isPending) {
     return <div className="h-8 w-8" aria-hidden="true" />;
@@ -120,6 +122,7 @@ export function HeaderAuth() {
               role="menuitem"
               onClick={handleDeleteAccount}
               disabled={deleting}
+              aria-busy={deleting}
               className="mt-1 block w-full px-2 py-1.5 text-left font-mono text-xs uppercase tracking-[0.18em] text-accent hover:bg-accent hover:text-bg focus-visible:bg-accent focus-visible:text-bg focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-60"
             >
               {deleting ? t("deleteAccountPending") : t("deleteAccount")}

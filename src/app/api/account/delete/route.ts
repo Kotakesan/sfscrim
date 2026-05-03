@@ -4,10 +4,13 @@
 
 import { NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { getSessionFromRequest } from "@/lib/auth/server";
+import { getAuth, getSessionFromRequest } from "@/lib/auth/server";
 import { deleteAccount } from "@/lib/db/account";
 
-const SESSION_COOKIE_NAMES = [
+// Better Auth が cookie を rotate / 追加した場合の保険として残す念のための strip list。
+// 1 次的な expire は auth.api.signOut 経由で行う（cookie 名・属性とも Better Auth 内部に
+// 追従させる）が、念のため代表名を `Max-Age=0` で flush しておく。
+const FALLBACK_COOKIE_NAMES = [
   "better-auth.session_token",
   "better-auth.session_data",
   "__Secure-better-auth.session_token",
@@ -19,11 +22,17 @@ const SESSION_COOKIE_NAMES = [
 function isSameOrigin(request: Request, expectedBaseUrl: string | undefined): boolean {
   const origin = request.headers.get("origin");
   if (!origin) return false;
+  let originHost: string;
+  try {
+    originHost = new URL(origin).host;
+  } catch {
+    return false;
+  }
   const requestUrl = new URL(request.url);
-  if (new URL(origin).host === requestUrl.host) return true;
+  if (originHost === requestUrl.host) return true;
   if (expectedBaseUrl) {
     try {
-      if (new URL(origin).host === new URL(expectedBaseUrl).host) return true;
+      if (originHost === new URL(expectedBaseUrl).host) return true;
     } catch {
       /* invalid env, fall through */
     }
@@ -42,13 +51,18 @@ export async function POST(request: Request): Promise<Response> {
   }
   await deleteAccount(env.DB, session.user.id);
 
-  // クライアントの session cookie を期限切れにする
+  // 1 次的な cookie 失効は Better Auth 経由（cookie 名・属性が library に追従）。
+  // 失敗ケース（cookie 名 mismatch 等）の保険として fallback list でも Max-Age=0 を返す。
   const headers = new Headers({ "content-type": "application/json" });
-  for (const name of SESSION_COOKIE_NAMES) {
-    headers.append(
-      "set-cookie",
-      `${name}=; Path=/; Max-Age=0; SameSite=Lax; HttpOnly`,
-    );
+  try {
+    const auth = await getAuth();
+    const upstream = await auth.api.signOut({ headers: request.headers, asResponse: true });
+    upstream.headers.getSetCookie?.().forEach((c) => headers.append("set-cookie", c));
+  } catch {
+    /* signOut 失敗時も fallback list で expire させる */
+  }
+  for (const name of FALLBACK_COOKIE_NAMES) {
+    headers.append("set-cookie", `${name}=; Path=/; Max-Age=0; SameSite=Lax; HttpOnly`);
   }
   return new NextResponse(JSON.stringify({ ok: true }), { status: 200, headers });
 }

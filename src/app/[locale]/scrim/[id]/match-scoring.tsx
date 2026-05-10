@@ -33,9 +33,11 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
   const recordMatch = useScrimStore((s) => s.recordMatch);
   const undoLast = useScrimStore((s) => s.undoLastMatch);
   const setStatus = useScrimStore((s) => s.setStatus);
+  const markSynced = useScrimStore((s) => s.markSynced);
   const { data: session } = useSession();
   const [finalizeOutcome, setFinalizeOutcome] = useState<FinalizeOutcome | null>(null);
   const [savePending, setSavePending] = useState(false);
+  const autoSyncedRef = useRef(false);
 
   const next = nextRegularBattle(scrim.matches);
   const outcome = regularSeasonOutcome(scrim);
@@ -75,7 +77,12 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify(serializeScrim(state)),
       });
-      setFinalizeOutcome(res.ok ? { kind: "saved" } : { kind: "save-failed" });
+      if (res.ok) {
+        markSynced(state.id, Math.floor(Date.now() / 1000));
+        setFinalizeOutcome({ kind: "saved" });
+      } else {
+        setFinalizeOutcome({ kind: "save-failed" });
+      }
     } catch {
       setFinalizeOutcome({ kind: "save-failed" });
     } finally {
@@ -84,9 +91,13 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
   };
 
   const onFinalize = async () => {
+    // 手動 finalize と auto-sync の二重 POST を防ぐためフラグを先に立てる
+    autoSyncedRef.current = true;
     setStatus(scrim.id, "finished");
     if (!session?.user) {
       setFinalizeOutcome({ kind: "signin-required" });
+      // 未ログインのまま終わるなら、後でログインしたとき自動同期させたいので解除
+      autoSyncedRef.current = false;
       return;
     }
     await trySave({ ...scrim, status: "finished" });
@@ -99,14 +110,12 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
 
   // ログアウト中に finalize して localStorage に finished のまま残った scrim を、
   // 後でログイン直後に自動で D1 へ同期する（finalize は idempotent な UPSERT）。
-  // ref は mount スコープのため、scrim/[id] 再訪問のたびに 1 回 POST が走る。
-  // 副作用は idempotent UPSERT なので無害だが、頻発するなら zustand に
-  // `lastSyncedAt` を持たせて二重発火を抑止する余地あり（後続 issue 候補）。
-  const autoSyncedRef = useRef(false);
+  // `scrim.lastSyncedAt` (zustand persist) で同期済みフラグを保持し、ナビゲートで
+  // mount しなおしても重複 POST しない。recordMatch / undoLastMatch でリセットされる。
   const userId = session?.user?.id;
+  const needsSync = scrim.status === "finished" && !!userId && !scrim.lastSyncedAt;
   useEffect(() => {
-    if (autoSyncedRef.current) return;
-    if (scrim.status !== "finished" || !userId) return;
+    if (autoSyncedRef.current || !needsSync) return;
     autoSyncedRef.current = true;
     // setState を effect 同期で呼ばない（react-hooks/set-state-in-effect 回避）。
     // microtask に流して mount 直後の render commit 後に走らせる。
@@ -115,7 +124,7 @@ export function RegularSeasonScoring({ scrim }: { scrim: ScrimState }) {
     });
     // trySave は最新 scrim を closure で参照する。trySave は依存追跡しない。
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [scrim.status, userId]);
+  }, [needsSync]);
 
   return (
     <section className="mt-12">

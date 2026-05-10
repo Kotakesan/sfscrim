@@ -6,12 +6,16 @@ import { NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { isMockAuthEnabledFromEnv } from "@/config/site";
 import { getAuth, MOCK_TEST_USER } from "@/lib/auth/server";
+import { isSameOrigin } from "@/lib/auth/csrf";
 import { isAccountDeleted } from "@/lib/db/account";
 
 export async function POST(request: Request): Promise<Response> {
   const { env } = await getCloudflareContext({ async: true });
   if (!isMockAuthEnabledFromEnv(env)) {
     return new NextResponse("Not Found", { status: 404 });
+  }
+  if (!isSameOrigin(request, env.BETTER_AUTH_URL)) {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
   }
 
   // 削除済アカウントの再ログインを拒否（issue #82 PR-C: 再ログイン不可要件）

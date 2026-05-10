@@ -42,6 +42,9 @@ export type ScrimState = {
   matches: MatchRecord[];
   status: ScrimStatus;
   createdAt: string;
+  // D1 cloud snapshot に同期した最終時刻 (Unix sec)。auto-sync の二重発火抑止に使う。
+  // undo 等で in_progress に戻った場合、再 finalize 時に updateScrim を経由してリセット。
+  lastSyncedAt?: number;
 };
 
 type ScrimStore = {
@@ -56,6 +59,7 @@ type ScrimStore = {
   setStatus: (id: string, status: ScrimStatus) => void;
   recordMatch: (id: string, match: MatchRecord) => void;
   undoLastMatch: (id: string) => void;
+  markSynced: (id: string, syncedAt: number) => void;
   reset: (id: string) => void;
   hasScrim: (id: string) => boolean;
   getScrim: (id: string) => ScrimState | undefined;
@@ -228,7 +232,8 @@ export const useScrimStore = create<ScrimStore>()(
               (m) => m.roundNo === match.roundNo && m.position === match.position,
             );
             if (dup) return s;
-            return { ...s, matches: [...s.matches, match] };
+            // 試合結果が変わったら lastSyncedAt は無効化（次の finalize で再 sync）
+            return { ...s, matches: [...s.matches, match], lastSyncedAt: undefined };
           }),
         }));
       },
@@ -237,8 +242,15 @@ export const useScrimStore = create<ScrimStore>()(
           scrims: updateScrim(state.scrims, id, (s) => ({
             ...s,
             matches: s.matches.slice(0, -1),
+            // 試合結果が変わったら lastSyncedAt は無効化
+            lastSyncedAt: undefined,
             // status を draft/in_progress に戻すかは workspace 側で判断
           })),
+        }));
+      },
+      markSynced: (id, syncedAt) => {
+        set((state) => ({
+          scrims: updateScrim(state.scrims, id, (s) => ({ ...s, lastSyncedAt: syncedAt })),
         }));
       },
       reset: (id) => {

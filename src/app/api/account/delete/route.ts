@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getAuth, getSessionFromRequest } from "@/lib/auth/server";
+import { isSameOrigin } from "@/lib/auth/csrf";
 import { deleteAccount } from "@/lib/db/account";
 
 // Better Auth が cookie を rotate / 追加した場合の保険として残す念のための strip list。
@@ -16,29 +17,6 @@ const FALLBACK_COOKIE_NAMES = [
   "__Secure-better-auth.session_token",
   "__Secure-better-auth.session_data",
 ];
-
-// destructive 操作なので SameSite=Lax の defense-in-depth として Origin を必ず check する。
-// 同オリジン or BETTER_AUTH_URL に一致しない場合は 403 で拒否。
-function isSameOrigin(request: Request, expectedBaseUrl: string | undefined): boolean {
-  const origin = request.headers.get("origin");
-  if (!origin) return false;
-  let originHost: string;
-  try {
-    originHost = new URL(origin).host;
-  } catch {
-    return false;
-  }
-  const requestUrl = new URL(request.url);
-  if (originHost === requestUrl.host) return true;
-  if (expectedBaseUrl) {
-    try {
-      if (originHost === new URL(expectedBaseUrl).host) return true;
-    } catch {
-      /* invalid env, fall through */
-    }
-  }
-  return false;
-}
 
 export async function POST(request: Request): Promise<Response> {
   const { env } = await getCloudflareContext({ async: true });

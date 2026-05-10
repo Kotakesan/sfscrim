@@ -5,6 +5,7 @@
 import { NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { getSessionFromRequest } from "@/lib/auth/server";
+import { isSameOrigin } from "@/lib/auth/csrf";
 import { findScrimOwner, saveScrimSnapshot } from "@/lib/db/scrims";
 import type { ScrimSnapshot } from "@/lib/scrim/snapshot";
 
@@ -47,6 +48,10 @@ function isValidSnapshot(input: unknown): input is ScrimSnapshot {
 }
 
 export async function POST(request: Request): Promise<Response> {
+  const { env } = await getCloudflareContext({ async: true });
+  if (!isSameOrigin(request, env.BETTER_AUTH_URL)) {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
   const session = await getSessionFromRequest(request.headers);
   if (!session?.user) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
@@ -62,7 +67,6 @@ export async function POST(request: Request): Promise<Response> {
     return NextResponse.json({ error: "invalid_payload" }, { status: 400 });
   }
 
-  const { env } = await getCloudflareContext({ async: true });
   const existingOwner = await findScrimOwner(env.DB, body.id);
   if (existingOwner && existingOwner !== session.user.id) {
     return NextResponse.json({ error: "forbidden" }, { status: 403 });

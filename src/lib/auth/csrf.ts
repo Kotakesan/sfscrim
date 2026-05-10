@@ -28,10 +28,3 @@ export function isSameOrigin(
   }
   return false;
 }
-
-// 共通レスポンス。route ごとの形式揺れを防ぐ。
-export const FORBIDDEN_RESPONSE = (): Response =>
-  new Response(JSON.stringify({ error: "forbidden" }), {
-    status: 403,
-    headers: { "content-type": "application/json" },
-  });

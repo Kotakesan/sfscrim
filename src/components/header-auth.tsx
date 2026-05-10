@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useSession, signOut } from "@/lib/auth/client";
@@ -14,6 +14,7 @@ export function HeaderAuth() {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) return;
@@ -35,6 +36,40 @@ export function HeaderAuth() {
       document.removeEventListener("keydown", onKey);
     };
   }, [open, deleteError]);
+
+  // Open 直後に最初の menuitem へ focus 移動 (WAI-ARIA APG menu button pattern)
+  useEffect(() => {
+    if (!open) return;
+    const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]');
+    items?.[0]?.focus();
+  }, [open]);
+
+  const onMenuKeyDown = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    const items = Array.from(
+      menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? [],
+    );
+    if (items.length === 0) return;
+    const current = items.indexOf(document.activeElement as HTMLElement);
+    let next = current;
+    switch (e.key) {
+      case "ArrowDown":
+        next = current < 0 ? 0 : (current + 1) % items.length;
+        break;
+      case "ArrowUp":
+        next = current < 0 ? items.length - 1 : (current - 1 + items.length) % items.length;
+        break;
+      case "Home":
+        next = 0;
+        break;
+      case "End":
+        next = items.length - 1;
+        break;
+      default:
+        return;
+    }
+    e.preventDefault();
+    items[next]?.focus();
+  };
 
   if (isPending) {
     return <div className="h-8 w-8" aria-hidden="true" />;
@@ -108,7 +143,7 @@ export function HeaderAuth() {
             </div>
           )}
           <hr className="my-2 border-line" />
-          <div role="menu">
+          <div role="menu" ref={menuRef} onKeyDown={onMenuKeyDown}>
             <button
               type="button"
               role="menuitem"
